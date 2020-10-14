@@ -1,0 +1,99 @@
+.new-attendee-container {
+    background-color: white;
+    height: 100%;
+    width: 100%;
+}
+
+.new-attendee-holder {
+    margin-top: 100px;
+}
+
+.section-div {
+    display: flex;
+    flex-direction: row;
+    margin-left: 10%;
+    margin-bottom: 30px;
+    align-items: center;
+}
+
+.section-div input:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.attendee-details-text-disabled {
+    font-size: 20px;
+    font-weight: 600;
+    margin-right: 10px;
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.attendee-details-text {
+    font-size: 20px;
+    font-weight: 600;
+    margin-right: 10px;
+}
+
+.attendee-details-input-text {
+    width: 40%;
+    height: 25px;
+    border: solid 2px #387C44;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.attendee-details-input-number {
+    width: 20%;
+    height: 25px;
+    border: solid 2px #387C44;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.temperature-button-div {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.temperature-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30%;
+    height: 40px;
+    background-color: #387C44;
+    border-radius: 30px;
+    font-size: 20px;
+    color: white;
+}
+
+.temperature-button:hover {
+    cursor: pointer;
+    background-color: #4CC417;
+}
+
+.new-attendee-error {
+    color: red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.new-attendee-error span {
+    font-size: 30px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.activate-toggle-span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 10px;
+}

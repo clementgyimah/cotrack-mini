@@ -1,0 +1,101 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Roboto", sans-serif;
+}
+
+.tabs-div {
+    position: fixed;
+    display: flex;
+    top: 0;
+    align-items: center;
+    background-color: white;
+    width: 100%;
+    height: 50px;
+    
+}
+
+.old-attendee-tab-div {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    width: 50%;
+    background-color: white;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.295);
+    color: black;
+    font-size: 21px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.old-attendee-tab-active-div {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    height: 50px;
+    background-color: #E0FFFF;
+    border-bottom: 4px solid #387C44;
+    color: black;
+    font-size: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    /*box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.4);*/
+}
+
+.new-attendee-tab-div {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    width: 50%;
+    margin-left: 50%;
+    background-color: white;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.295);
+    color: black;
+    font-size: 21px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.new-attendee-tab-active-div {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    height: 50px;
+    margin-left: 50%;
+    background-color: #E0FFFF;
+    border-bottom: 4px solid #387C44;
+    color: black;
+    font-size: 25px;
+    font-weight: 600;
+    cursor: pointer;
+    /*box-shadow: 5px 5px 20px rgba(0, 0, 0, 0.4);*/
+}
+
+.body-div {
+    margin-top: 80px;
+    width: 100%;
+    height: 100%;
+    background-color: yellow;
+}
+
+.session-unavailable-div {
+    position: fixed;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.session-unavailable-text {
+    color: red;
+    font-size: 30px;
+}

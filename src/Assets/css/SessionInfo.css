@@ -1,0 +1,84 @@
+.session-info-container {
+    background-color: white;
+    height: 100%;
+    width: 100%;
+}
+
+.session-info-header {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 50px;
+    align-items: center;
+    justify-content: center;
+    color: black;
+    background-color: white;
+    box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.3);
+    font-size: 30px;
+    font-weight: 600;
+}
+.session-info-body {
+    padding-top: 80px;
+    width: 100%;
+}
+
+.time-div {
+    display: flex;
+    flex-direction: row;
+}
+
+.specific-time-div {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.session-info-table-div {
+    margin-top: 10px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.session-info-table {
+    border-top: solid 3px #387C44;
+    width: 95%;
+}
+
+.session-info-table-thread-tr-th {
+    font-size: 18px;
+    color: white;
+    border: solid 3px #387C44;
+    background-color: #387C44;
+}
+
+.session-table-cells-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.session-info-table-tbody-tr-td {
+    font-size: 15px;
+    border-right: solid 0px #387C44;
+    border-left: solid 0px #387C44;
+}
+
+.no-sessions-found-div {
+    position: fixed;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.no-sessions-found-text {
+    color: red;
+    font-size: 30px;
+}

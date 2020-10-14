@@ -1,0 +1,72 @@
+{
+  "name": "covid_event_registration",
+  "version": "0.1.0",
+  "description": "Cotrack is a desktop application used for covid 19 tracking",
+  "author": "Gyimah CLement",
+  "private": true,
+  "dependencies": {
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "electron-is-dev": "^1.2.0",
+    "nedb": "^1.8.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-icons": "^3.10.0",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "3.4.1"
+  },
+  "scripts": {
+    "react-start": "react-scripts start",
+    "react-build": "react-scripts build",
+    "react-test": "react-scripts test --env=jsdom",
+    "react-eject": "react-scripts eject",
+    "start": "concurrently \"BROWSER=none yarn react-start\" \"wait-on http://localhost:3000 && electron .\"",
+    "build": "yarn react-build && electron-builder -mwl",
+    "build-windows": "yarn react-build && electron-builder --win",
+    "build-linux": "yarn react-build && electron-builder --linux",
+    "build-mac": "yarn react-build && electron-builder --mac",
+    "release": "yarn react-build && electron-builder --publish=always"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "concurrently": "^5.2.0",
+    "electron": "^10.1.3",
+    "electron-builder": "^22.7.0",
+    "electron-reload": "^1.5.0",
+    "wait-on": "^5.1.0"
+  },
+  "build": {
+    "appId": "com.cotrack",
+    "productName": "Cotrack",
+    "copyright": "Copyright © 2020, Cotrack",
+    "win": {
+      "icon": "build/cotrack.ico",
+      "publisherName": "Gyimah Clement"
+    },
+    "linux": {
+      "maintainer": "Gyimah Clement",
+      "vendor": "Gyimah Clement",
+      "executableName": "Cotrack",
+      "icon": "build/128x128.png",
+      "synopsis": "Covid 19 tracking application",
+      "category": "Office"
+    }
+  },
+  "main": "public/electron.js",
+  "homepage": "./"
+}

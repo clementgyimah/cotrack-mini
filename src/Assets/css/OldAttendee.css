@@ -1,0 +1,122 @@
+.old-attendee-container {
+    background-color: white;
+    height: 100%;
+    width: 100%;
+}
+
+.edit-container {
+    position: fixed;
+    background-color: white;
+    height: 100%;
+    width: 100%;
+}
+
+.edit-header {
+    top: 0;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 50px;
+    align-items: center;
+    justify-content: center;
+    color: black;
+    background-color: white;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.295);
+    font-size: 30px;
+    font-weight: 600;
+}
+
+.search-input-div {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+    margin-top: 100px;
+}
+
+.search-input {
+    border: solid 2px #387C44;
+    width: 50%;
+    height: 30px;
+    border-radius: 20px;
+    font-size: 20px;
+    display: flex;
+}
+
+.type-of-table {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 50px;
+}
+
+.type-of-table-title {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.type-of-table-toggle-span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 10px;
+}
+
+.old-attendee-table-div {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.old-attendee-table {
+    border-top: solid 3px #387C44;
+    width: 95%;
+}
+
+.old-attendee-table-thread-tr-th {
+    font-size: 18px;
+    color: white;
+    border: solid 3px #387C44;
+    background-color: #387C44;
+}
+
+.old-attendee-table-tbody-tr-td {
+    font-size: 15px;
+    border-right: solid 0px #387C44;
+    border-left: solid 0px #387C44;
+}
+
+.table-cells-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.edit-table-cells-div {
+    display: flex;
+    width: 100%;
+}
+
+.action-icon-span {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.no-data-available-div {
+    position: fixed;
+    display: flex;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+.no-data-available-text {
+    color: red;
+    font-size: 30px;
+}
