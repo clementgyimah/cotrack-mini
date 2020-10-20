@@ -14,11 +14,11 @@ export default function SessionInfo() {
   useEffect(() => {
     var isSubscribed = true
     if (isSubscribed) {
-      ipcRenderer.send('old-attendee-current-session-all');
-      ipcRenderer.on('sessionTime-reply', async (event, arg) => {
+      ipcRenderer.send('view-old-attendee-current-session-all');
+      ipcRenderer.on('view-sessionTime-reply', async (event, arg) => {
         await setTimeHolder(arg);
       })
-      ipcRenderer.on('old-attendee-current-session-all-reply', async (event, arg) => {
+      ipcRenderer.on('view-old-attendee-current-session-all-reply', async (event, arg) => {
         await setSessionHolder(arg);
       })
       ipcRenderer.send('search-tempDate');

@@ -369,18 +369,29 @@ ipcMain.on('new-attendee', async (event, arg) => {
 //verify if a session has been started for the current date
 //Done by checking if the current date exists. If it exists, there will be a current session started
 ipcMain.on('verify-session-availability', async (event, arg) => {
-    await session.findOne({ _id: currDate }, async (err, doc) => {
+    await temp.findOne({ _id: 2 }, async (err, doc) => {
         if (err) return console.log(err);
         else if (doc) {
-            const sessionAvailable = true;
-            return event.reply('verify-session-availability-reply', sessionAvailable);
+            const theTempDate = doc.tempDate;
+            await session.findOne({ _id: theTempDate }, async (err, doc) => {
+                if (err) return console.log(err);
+                else if (doc) {
+                    const sessionAvailable = true;
+                    return event.reply('verify-session-availability-reply', sessionAvailable);
+                }
+                else {
+                    const sessionAvailable = false;
+                    return event.reply('verify-session-availability-reply', sessionAvailable);
+                }
+
+            })
         }
         else {
             const sessionAvailable = false;
             return event.reply('verify-session-availability-reply', sessionAvailable);
         }
-
     })
+
 })
 
 //event emitter used to search for all attendees who have been registered in the database
@@ -404,6 +415,24 @@ ipcMain.on('old-attendee-current-session-all', async (event, arg) => {
                     const gottenAttendees = doc.session.attendee;
                     await event.reply('sessionTime-reply', { start: doc.session.start, end: doc.session.end });
                     return await event.reply('old-attendee-current-session-all-reply', gottenAttendees);
+                }
+            });
+        }
+    })
+});
+
+//event emitter used to search for all attendees who have been registered in the current session
+//also used to send a the results of the search in the form a reply to the frontend
+ipcMain.on('view-old-attendee-current-session-all', async (event, arg) => {
+    await temp.findOne({ _id: 1 }, async (err, sesObj) => {
+        if (sesObj) {
+            const tempDateValue = sesObj.tempViewDate;
+            await session.findOne({ _id: tempDateValue }, async (err, doc) => {
+                if (err) return console.log(err);
+                else if (doc) {
+                    const gottenAttendees = doc.session.attendee;
+                    await event.reply('view-sessionTime-reply', { start: doc.session.start, end: doc.session.end });
+                    return await event.reply('view-old-attendee-current-session-all-reply', gottenAttendees);
                 }
             });
         }
@@ -475,32 +504,19 @@ ipcMain.on('record-attendee-temperature', async (event, arg) => {
         temperature
     }
 
-    return await session.findOne({ _id: currDate }, async (err, doc) => {
+    return await temp.findOne({ _id: 2 }, async (err, doc) => {
         if (err) return console.log(err);
-        //check if the attendee to record his/her temperature is not already stored in the current session.
-        //call the recordAttendeeTemperature function and send a "false" reply to frontend if the attendee does not exist already in the current session
-        var theAttendeesArray = doc.session;
-        if (theAttendeesArray.attendee.length === 0) {
-            const attendeeExists = false
-            await theAttendeesArray.attendee.push(sessionAttendeeDetails);
-            await session.update({ _id: currDate }, { $set: { session: theAttendeesArray } }, async (err) => {
+        else if (doc) {
+            const theTempDate = doc.tempDate;
+            return await session.findOne({ _id: theTempDate }, async (err, doc) => {
                 if (err) return console.log(err);
-                return;
-            })
-            await event.reply('record-attendee-temperature-reply', attendeeExists);
-            await analyzerWindow.reload();
-            return await sessionWindow.reload();
-        }
-        else {
-            for (var j = 0; j < theAttendeesArray.attendee.length; j++) {
-                if (theAttendeesArray.attendee[j].firstName === firstName && theAttendeesArray.attendee[j].lastName === lastName && theAttendeesArray.attendee[j].gender === gender && theAttendeesArray.attendee[j].location === location && theAttendeesArray.attendee[j].contactNumber === contactNumber && theAttendeesArray.attendee[j].emailAddress === emailAddress) {
-                    const attendeeExists = true
-                    return await event.reply('record-attendee-temperature-reply', attendeeExists);
-                }
-                else if (j === (theAttendeesArray.attendee.length) - 1) {
+                //check if the attendee to record his/her temperature is not already stored in the current session.
+                //call the recordAttendeeTemperature function and send a "false" reply to frontend if the attendee does not exist already in the current session
+                var theAttendeesArray = doc.session;
+                if (theAttendeesArray.attendee.length === 0) {
                     const attendeeExists = false
                     await theAttendeesArray.attendee.push(sessionAttendeeDetails);
-                    await session.update({ _id: currDate }, { $set: { session: theAttendeesArray } }, async (err) => {
+                    await session.update({ _id: theTempDate }, { $set: { session: theAttendeesArray } }, async (err) => {
                         if (err) return console.log(err);
                         return;
                     })
@@ -508,11 +524,30 @@ ipcMain.on('record-attendee-temperature', async (event, arg) => {
                     await analyzerWindow.reload();
                     return await sessionWindow.reload();
                 }
-            }
+                else {
+                    for (var j = 0; j < theAttendeesArray.attendee.length; j++) {
+                        if (theAttendeesArray.attendee[j].firstName === firstName && theAttendeesArray.attendee[j].lastName === lastName && theAttendeesArray.attendee[j].gender === gender && theAttendeesArray.attendee[j].location === location && theAttendeesArray.attendee[j].contactNumber === contactNumber && theAttendeesArray.attendee[j].emailAddress === emailAddress) {
+                            const attendeeExists = true
+                            return await event.reply('record-attendee-temperature-reply', attendeeExists);
+                        }
+                        else if (j === (theAttendeesArray.attendee.length) - 1) {
+                            const attendeeExists = false
+                            await theAttendeesArray.attendee.push(sessionAttendeeDetails);
+                            await session.update({ _id: theTempDate }, { $set: { session: theAttendeesArray } }, async (err) => {
+                                if (err) return console.log(err);
+                                return;
+                            })
+                            await event.reply('record-attendee-temperature-reply', attendeeExists);
+                            await analyzerWindow.reload();
+                            return await sessionWindow.reload();
+                        }
+                    }
+                }
+
+
+
+            })
         }
-
-
-
     })
 })
 
@@ -527,38 +562,6 @@ ipcMain.on('open-session', async (event, arg) => {
         })
 });
 
-/*
-//search for the sessions of a particular date and the attendees who attended each session.
-//Send the results as an object in the form of a reply when this event emitter is on or activated
-ipcMain.on('sessionInfo', async (event, arg) => {
-    await temp.findOne({ _id: 1 }, async (err, doc) => {
-        if (err) return console.log(err);
-        else {
-            if (doc) {
-                const tempViewDate = doc.tempViewDate;
-                await session.findOne({ _id: tempViewDate }, async (err, theSessionInfo) => {
-                    if (err) return console.log(err);
-                    else if (theSessionInfo) {
-                        var manipulateArray1 = [];
-                        const mainArray = theSessionInfo.session.attendee
-                        manipulateArray1.push(theSessionInfo.session.start);
-                        manipulateArray1.push(theSessionInfo.session.end);
-                        await event.reply('sessionTime-reply', manipulateArray1);
-                        return await event.reply('sessionInfo-reply', mainArray);
-                    }
-                    else {
-                        var manipulateArray2 = [];
-                        return await event.reply('sessionInfo-reply', manipulateArray2);
-                    }
-                });
-            }
-            else {
-                return;
-            }
-        }
-    })
-})
-*/
 
 //search for the date that was entered in the frontend to view the session info
 //This date is stored in the database
@@ -727,19 +730,23 @@ async function newAttendee(data) {
         if (err) return console.log(err)
         return;
     })
-    //Add the new attendee's information (temperature, first name, last name etc..) to the current session of the current date of church service.
-    await session.findOne({ _id: currDate }, async (err, doc) => {
+    return await temp.findOne({ _id: 2 }, async (err, doc) => {
         if (err) return console.log(err);
-        const sessionHolder = doc.session
-        await sessionHolder.attendee.push(sessionAttendeeDetails)
+        else if (doc) {
+            const theTempDate = doc.tempDate;
+            //Add the new attendee's information (temperature, first name, last name etc..) to the current church service or to the service set in settings
+            await session.findOne({ _id: theTempDate }, async (err, doc) => {
+                if (err) return console.log(err);
+                const sessionHolder = doc.session
+                await sessionHolder.attendee.push(sessionAttendeeDetails)
 
-        return await session.update({ _id: currDate }, { $set: { session: sessionHolder } }, async (err) => {
-            if (err) return console.log(err);
-            return;
-        })
+                return await session.update({ _id: theTempDate }, { $set: { session: sessionHolder } }, async (err) => {
+                    if (err) return console.log(err);
+                    return;
+                })
+            })
+        }
     })
-
-    return;
 }
 
 

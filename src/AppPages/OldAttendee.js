@@ -19,6 +19,7 @@ export default function OldAttendee() {
   const [currentLocation, setCurrentLocation] = useState("");
   const [currentContactNumber, setCurrentContactNumber] = useState("");
   const [currentEmailAddress, setCurrentEmailAddress] = useState("");
+  const [timeHolder, setTimeHolder] = useState({});
 
   useEffect(() => {
     var isSubscribed = true
@@ -32,6 +33,9 @@ export default function OldAttendee() {
         await setCurrentSession(arg);
       })
       ipcRenderer.send('old-attendee-current-session-all');
+      ipcRenderer.on('sessionTime-reply', async (event, arg) => {
+        await setTimeHolder(arg);
+      })
       ipcRenderer.on('old-attendee-current-session-all-reply', async (event, arg) => {
         await setAllCurrentSessionAttendee(arg);
       })
@@ -96,6 +100,10 @@ export default function OldAttendee() {
       <div className="type-of-table">
         <span className="type-of-table-title">Active Date ( {currentSession} ): </span>
         <span className="type-of-table-toggle-span" onClick={() => viewCurrentSessionFunc()}>{viewCurrentSession ? <BsToggleOn className="type-of-table-toggle-on" size={30} color="#387C44" /> : <BsToggleOff className="type-of-table-toggle-off" size={30} color="#387C44" />}</span>
+      </div>
+      <div className="time-div">
+        <div className="specific-time-div">Start Time: {timeHolder.start}</div>
+        <div className="specific-time-div">End Time: {timeHolder.end}</div>
       </div>
       <div className="old-attendee-table-div">
         <table className="old-attendee-table" rules="all">

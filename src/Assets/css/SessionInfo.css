@@ -14,12 +14,12 @@
     justify-content: center;
     color: black;
     background-color: white;
-    box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.295);
     font-size: 30px;
     font-weight: 600;
 }
 .session-info-body {
-    padding-top: 80px;
+    padding-top: 100px;
     width: 100%;
 }
 
