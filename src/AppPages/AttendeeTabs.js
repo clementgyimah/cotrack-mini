@@ -1,3 +1,4 @@
+//Calling all necessary packages and libraries
 import React, { useState, useEffect } from 'react';
 import '../Assets/css/AttendeeTabs.css';
 import NewAttendee from './NewAttendee';
@@ -5,10 +6,12 @@ import OldAttendee from './OldAttendee';
 const { ipcRenderer } = window.require('electron');
 
 function AttendeeTabs() {
+  //declaration of state variables
   const [oldAttendeeTab, setOldAttendeeTab] = useState("old-attendee-tab-active-div");
   const [newAttendeeTab, setNewAttendeeTab] = useState("new-attendee-tab-div");
   const [sessionAvailable, setSessionAvailable] = useState(false);
 
+  //react hook that starts first when component mounts
   useEffect(() => {
     var isSubscribed = true;
     if (isSubscribed) {
@@ -20,10 +23,13 @@ function AttendeeTabs() {
     return () => isSubscribed = false;
   }, [])
 
+  //expression to make old attendee tab active
   const oldAttendeeTabFunc = () => {
     setOldAttendeeTab("old-attendee-tab-active-div");
     setNewAttendeeTab("new-attendee-tab-div")
   }
+
+  //expression to make new attendee tab active
   const newAttendeeTabFunc = () => {
     setOldAttendeeTab("old-attendee-tab-div");
     setNewAttendeeTab("new-attendee-tab-active-div");
@@ -31,7 +37,7 @@ function AttendeeTabs() {
 
   return (
     <div className="tabs-container">
-      {
+      {/**check if a session is available for the active date in the database */
         sessionAvailable ?
           (
             <div>
@@ -56,6 +62,7 @@ function AttendeeTabs() {
           :
           (
             <div className="session-unavailable-div">
+              {/**error to return if no session is available for the active date in the database */}
               <div className="session-unavailable-text"> <span role="img" aria-label="EyesDown">😔</span> Sorry, no session started for today</div>
             </div>
           )

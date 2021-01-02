@@ -1,17 +1,21 @@
+//Calling all necessary packages and libraries
 import React, { useState, useEffect } from 'react';
 import "../Assets/css/SessionInfo.css";
 const { ipcRenderer } = window.require('electron');
 
+//renderer process to listen to backend after PDF download is done
 ipcRenderer.on('pdf-printed', async (event, arg) => {
   return alert("😁 PDF Downloaded!!!\n\nCheck the path below on your computer file system:\n" + arg);
 })
 
 export default function SessionInfo() {
+  //declaration of state variables
   const [sessionHolder, setSessionHolder] = useState([]);
   const [dateHolder, setDateHolder] = useState("");
   const [timeHolder, setTimeHolder] = useState({});
 
   useEffect(() => {
+    //react hook that starts first when component mounts
     var isSubscribed = true
     if (isSubscribed) {
       ipcRenderer.send('view-old-attendee-current-session-all');
@@ -46,7 +50,7 @@ export default function SessionInfo() {
                   <div className="specific-time-div">Start Time: {timeHolder.start}</div>
                   <div className="specific-time-div">End Time: {timeHolder.end}</div>
                 </div>
-
+                {/**table div */}
                 <div className="session-info-table-div">
                   <table className="session-info-table" rules="all">
                     <thead className="session-info-table-thread">
@@ -85,6 +89,7 @@ export default function SessionInfo() {
             )
             :
             <div className="no-sessions-found-div">
+              {/**error to return when no session is recorded for the date whose information is being searched */}
               <div className="no-sessions-found-text"> <span role="img" aria-label="EyesDown">😔</span> Sorry, there wasn't any recorded sessions on this date</div>
             </div>
         }

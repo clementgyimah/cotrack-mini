@@ -1,3 +1,4 @@
+//Calling all necessary packages and libraries
 import React, { useEffect, useState } from 'react';
 import TemperatureModal from './TemperatureModal';
 import "../Assets/css/OldAttendee.css";
@@ -6,6 +7,7 @@ import { BsToggleOff, BsToggleOn } from 'react-icons/bs';
 const { ipcRenderer } = window.require('electron');
 
 export default function OldAttendee() {
+  //declaration of state variables
   const [allAttendee, setAllAttendee] = useState([]);
   const [searchActive, setSearchActive] = useState(false);
   const [groupAttendee, setGroupAttendee] = useState([]);
@@ -22,6 +24,7 @@ export default function OldAttendee() {
   const [timeHolder, setTimeHolder] = useState({});
 
   useEffect(() => {
+    //react hook that starts first when component mounts or the varibale, "viewCurrentSession", changes
     var isSubscribed = true
     if (isSubscribed) {
       ipcRenderer.send('old-attendee-all');
@@ -43,6 +46,7 @@ export default function OldAttendee() {
     return () => isSubscribed = false
   }, [viewCurrentSession])
 
+  //expression to monitor changes in the search input
   const searchChange = searchObject => {
     const searchName = searchObject.target.value;
     if (viewCurrentSession) {
@@ -71,6 +75,7 @@ export default function OldAttendee() {
     }
   }
 
+  //expressions to set inputs to their respective state variables
   const handleTemperature = (firstName, lastName, gender, location, contactNumber, emailAddress) => {
     setCurrentFirstName(firstName);
     setCurrentLastName(lastName);
@@ -81,30 +86,36 @@ export default function OldAttendee() {
     setShowTempModal(true);
   }
 
+  //expression to take care of closing the temperature recording modal
   const closeTempModal = () => {
     setShowTempModal(false);
   }
 
+  //expression to take care of showing only attendees of the current session on the table
   const viewCurrentSessionFunc = () => {
     setViewCurrentSession(!viewCurrentSession);
   }
 
   return (
     <div className="old-attendee-container">
+      {/** temperature recording modal component call */}
       <TemperatureModal show={showTempModal} handleClose={() => closeTempModal()} cFirstName={currentFirstName} cLastName={currentLastName} cGender={currentGender} cLocation={currentLocation} cContactNumber={currentContactNumber} cEmailAddress={currentEmailAddress} />
+      {/**search input div */}
       <div className="search-input-div">
         <input className="search-input" type="text"
-          placeholder="Type something to search list items"
+          placeholder="Type something to search for attendee(s)"
           onChange={searchChange} />
       </div>
       <div className="type-of-table">
         <span className="type-of-table-title">Active Date ( {currentSession} ): </span>
         <span className="type-of-table-toggle-span" onClick={() => viewCurrentSessionFunc()}>{viewCurrentSession ? <BsToggleOn className="type-of-table-toggle-on" size={30} color="#387C44" /> : <BsToggleOff className="type-of-table-toggle-off" size={30} color="#387C44" />}</span>
       </div>
+      {/**Starting and ending time of the session */}
       <div className="time-div">
         <div className="specific-time-div">Start Time: {timeHolder.start}</div>
         <div className="specific-time-div">End Time: {timeHolder.end}</div>
       </div>
+      {/**table div */}
       <div className="old-attendee-table-div">
         <table className="old-attendee-table" rules="all">
           <thead className="old-attendee-table-thread">

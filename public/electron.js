@@ -9,7 +9,7 @@ const fs = require('fs');
 const isDev = require('electron-is-dev');
 const { ipcMain } = require('electron');
 
-// Enable live reload for Electron
+// Enable live reload for Electron during development mode
 if (isDev) {
     require('electron-reload')(__dirname, {
         // Note that the path to electron may vary according to the main file
@@ -18,7 +18,7 @@ if (isDev) {
     })
 }
 
-//check which operating system it is
+//variables to check which operating system it is
 const isMac = process.platform === 'darwin';
 const isWindows = process.platform === 'win32';
 
@@ -575,6 +575,7 @@ ipcMain.on('search-tempDate', async (event, arg) => {
     })
 })
 
+//event emitter used to search for the current session in use
 ipcMain.on('search-current-session', async (event, arg) => {
     await temp.findOne({ _id: 2 }, async (err, doc) => {
         var theTempDate;
@@ -586,19 +587,33 @@ ipcMain.on('search-current-session', async (event, arg) => {
     })
 })
 
+//event emitter used to search for the analysis data of all the sessions
 ipcMain.on('analysis-data', async (event, arg) => {
     await session.find({}, async (err, doc) => {
         if (doc) {
-            /*
-            var femaleNum;
-            var maleNum;
-            //const theAttendees = []
-            const genderArray = [maleNum, femaleNum];
-            */
+            var tempDoc = [];
+            var tempHolder;
+            for (var k = 0; k < doc.length; k++) {
+                //push each object of the analysis data into the array "tempDoc" using the format below
+                await tempDoc.push({ "_id": doc[k]._id, "maleNum": 0, "femaleNum": 0, "start": doc[k].session.start, "end": doc[k].session.end, "attendeeeNum": doc[k].session.attendee.length })
+            }
+            //loop through the data of all sessions to check the number of males and females
+            for (var i = 0; i < doc.length; i++) {
+                var maleNum = 0;
+                var femaleNum = 0;
+                tempHolder = doc[i].session.attendee;
+                for (var j = 0; j < tempHolder.length; j++) {
+                    if (tempHolder[j].gender === "Male") maleNum += 1;
+                    else femaleNum += 1;
+                }
+                tempDoc[i].maleNum = maleNum;
+                tempDoc[i].femaleNum = femaleNum;
+            }
+
             const sessionAvailable = true;
             await event.reply('analysis-data-available-reply', sessionAvailable);
             //await event.reply('analysis-data-gender-reply', genderArray);
-            return await event.reply('analysis-data-reply', doc);
+            return await event.reply('analysis-data-reply', tempDoc);
         }
         else {
             const sessionAvailable = false;
@@ -615,10 +630,28 @@ ipcMain.on('analysis-data-search', async (event, arg) => {
     await session.find({}, async (err, doc) => {
         if (err) return console.log(err);
         else {
+
+            var tempDoc = [];
+            var tempHolder;
+            for (var k = 0; k < doc.length; k++) {
+                await tempDoc.push({ "_id": doc[k]._id, "maleNum": 0, "femaleNum": 0, "start": doc[k].session.start, "end": doc[k].session.end, "attendeeeNum": doc[k].session.attendee.length })
+            }
+            for (var i = 0; i < doc.length; i++) {
+                var maleNum = 0;
+                var femaleNum = 0;
+                tempHolder = doc[i].session.attendee;
+                for (var j = 0; j < tempHolder.length; j++) {
+                    if (tempHolder[j].gender === "Male") maleNum += 1;
+                    else femaleNum += 1;
+                }
+                tempDoc[i].maleNum = maleNum;
+                tempDoc[i].femaleNum = femaleNum;
+            }
+
             var currentArray = []
-            for (var j = 0; j < doc.length; j++) {
-                if (doc[j]._id.toLowerCase().indexOf(searchName) >= 0) {
-                    currentArray.push(doc[j]);
+            for (var l = 0; l < tempDoc.length; l++) {
+                if (tempDoc[l]._id.toLowerCase().indexOf(searchName) >= 0) {
+                    await currentArray.push(tempDoc[l]);
                 }
             }
             return await event.reply('analysis-data-search-reply', currentArray);
@@ -768,6 +801,7 @@ async function putNewDate(startingTime, endingTime) {
     return;
 }
 
+//function to take care of storing the temporary date to the database
 async function tempDate(viewSessionDate) {
     //set the temporary date holder to the date entered in the frontend
     //the id for the temporary date holder is 2
@@ -782,6 +816,7 @@ async function tempDate(viewSessionDate) {
     })
 }
 
+//function to take care of printing a session and it's attendees to PDF
 async function takeCareOfPDFPrinting() {
     const downloadsPath = electron.app.getPath('downloads');
     await temp.findOne({ _id: 2 }, async (err, doc) => {
@@ -837,6 +872,7 @@ async function takeCareOfPDFPrinting() {
     })
 }
 
+//function to take care of printing a session and it's attendees to printer
 async function takeCareOfPrinterPrinting() {
     console.log('Hello Clement. Print with a printer');
 }
@@ -972,12 +1008,14 @@ const printTemplate = [
     {
         label: "Print",
         submenu: [
-            { label: "as PDF",  /*icon: 'src/Assets/images/printer1.png',*/  click: () => takeCareOfPDFPrinting() },
+            { label: "as PDF",/* icon: 'src/Assets/images/printer1.png',*/ click: () => takeCareOfPDFPrinting() },
             { label: "with Printer", click: () => takeCareOfPrinterPrinting() }
         ]
     }
 ]
 
+//setting up templates from which menus will be built
 const general = Menu.buildFromTemplate(generalTemplate);
 const printer = Menu.buildFromTemplate(printTemplate);
+//creating the main menu from a template
 Menu.setApplicationMenu(general);

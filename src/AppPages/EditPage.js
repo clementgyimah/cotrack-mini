@@ -1,3 +1,4 @@
+//Calling all necessary packages and libraries
 import React, { useState, useEffect } from 'react';
 import '../Assets/css/OldAttendee.css';
 import EditAttendeeModal from './EditAttendeeModal';
@@ -5,6 +6,7 @@ import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 const { ipcRenderer } = window.require('electron');
 
 export default function EditPage() {
+  //declaration of state variables
   const [allAttendee, setAllAttendee] = useState([]);
   const [searchActive, setSearchActive] = useState(false);
   const [groupAttendee, setGroupAttendee] = useState([]);
@@ -17,6 +19,7 @@ export default function EditPage() {
   const [editContactNumber, setEditContactNumber] = useState("");
   const [editEmailAddress, setEditEmailAddress] = useState("");
 
+  //react hook that starts first when component mounts
   useEffect(() => {
     var isSubscribed = true
     if (isSubscribed) {
@@ -28,6 +31,7 @@ export default function EditPage() {
     return () => isSubscribed = false
   }, [])
 
+  //expression to handle contacting backend when the search input is active
   const searchChange = searchObject => {
     const searchName = searchObject.target.value;
 
@@ -44,6 +48,7 @@ export default function EditPage() {
 
   }
 
+  //expression to handle setting the state variables to their respective inputs
   const handleEdit = (id, firstName, lastName, gender, location, contactNumber, emailAddress) => {
     setEditId(id)
     setEditFirstName(firstName);
@@ -55,23 +60,28 @@ export default function EditPage() {
     setShowEditModal(true);
   }
 
+  //expression to handle closing the edit modal
   const closeTempModal = () => {
     setShowEditModal(false);
   }
 
+  //expression to prompt backend to delete a certain attendee
   const handleDelete = (id) => {
     ipcRenderer.send('delete-attendee', id);
   }
 
   return (
     <div className="old-attendee-container">
+      {/** edit attendee modal component call */}
       <EditAttendeeModal show={showEditModal} handleClose={() => closeTempModal()} cId={editId} cFirstName={editFirstName} cLastName={editLastName} cGender={editGender} cLocation={editLocation} cContactNumber={editContactNumber} cEmailAddress={editEmailAddress} />
       <div className="edit-header">Edit Attendee</div>
+      {/**search input div */}
       <div className="search-input-div">
         <input className="search-input" type="text"
-          placeholder="Type something to search list items"
+          placeholder="Type something to search for attendee(s)"
           onChange={searchChange} />
       </div>
+      {/**table div */}
       <div className="old-attendee-table-div">
         <table className="old-attendee-table" rules="all">
           <thead className="old-attendee-table-thread">
@@ -86,7 +96,7 @@ export default function EditPage() {
             </tr>
           </thead>
           <tbody className="old-attendee-table-tbody">
-            {
+            {/**check if the search input is active or in use */
               searchActive ? (
                 groupAttendee ?
                   groupAttendee.map(function (data) {
@@ -99,6 +109,7 @@ export default function EditPage() {
                         <td className="old-attendee-table-tbody-tr-td"><div className="table-cells-div">{data.contactNumber}</div></td>
                         <td className="old-attendee-table-tbody-tr-td"><div className="table-cells-div">{data.emailAddress}</div></td>
                         <td className="old-attendee-table-tbody-tr-td">
+                          {/**action buttons on the table */}
                           <div className="edit-table-cells-div">
                             <span className="action-icon-span" onClick={() => handleEdit(data._id, data.firstName, data.lastName, data.gender, data.location, data.contactNumber, data.emailAddress)}><FaEdit /></span>
                             <span className="action-icon-span" onClick={() => handleDelete(data._id)}><FaTrashAlt /></span>

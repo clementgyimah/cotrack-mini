@@ -1,9 +1,11 @@
+//Calling all necessary packages and libraries
 import React, { useState, useEffect } from 'react';
 import '../Assets/css/HomePage.css';
 import { FaTools, FaBars, FaWindowMaximize, FaEdit, FaMedapps } from 'react-icons/fa';
 const { ipcRenderer } = window.require('electron')
 
 function HomePage() {
+    //declaration of state variables
     const [takeCareOfService, setTakeCareOfService] = useState("");
     const [bigSidebar, setBigSidebar] = useState(false);
     const [sideBarType, setSidebarType] = useState("short-home-content");
@@ -20,19 +22,21 @@ function HomePage() {
     const [serviceAlreadyStarted, setServiceAlreadyStarted] = useState(false);
     const [churchName, setChurchName] = useState("");
 
+    //react hook that starts first when component mounts
     useEffect(() => {
         var isSubscribed = true;
         if (isSubscribed) {
             ipcRenderer.send('get-church-name')
             ipcRenderer.on('get-church-name-reply', async (event, arg) => {
-              await setChurchName(arg)
+                await setChurchName(arg)
             })
         }
         return () => isSubscribed = false;
     })
 
+    //expression to handle starting a new session by prompting the backend
     const startNewService = () => {
-        if ( serviceStartingTime.length === 0 || serviceEndingTime.length === 0) {
+        if (serviceStartingTime.length === 0 || serviceEndingTime.length === 0) {
             setInvalidStart(true);
         }
         else {
@@ -49,33 +53,41 @@ function HomePage() {
         }
     }
 
+    //expression to handle viewing session information
     const handleViewService = () => {
         if (takeCareOfService.length === 0) setInvalidView(true)
         else {
             ipcRenderer.send('open-session', takeCareOfService);
         }
     }
+
+    //expression to handle inputs for viewing session information
     const handleInputService = (e) => {
         setTakeCareOfService(e.target.value);
         if (invalidView) setInvalidView(false);
     }
 
+    //expression to prompt backend to open the current session window
     const sidebarMenuCurrentService = () => {
         ipcRenderer.send("open-current-session");
     }
 
+    //expression to prompt backend to open the edit attendee window
     const sidebarMenuEdit = () => {
         ipcRenderer.send('open-edit-window');
     }
 
+    //expression to prompt backend to open the session analyzer window
     const sidebarMenuSessionAnalyzer = () => {
         ipcRenderer.send('open-analysis-window');
     }
 
+    //expression to prompt backend to open the settings window
     const sidebarMenuSettings = () => {
         ipcRenderer.send('open-settings-window');
     }
 
+    //expression to handle toggling of the sidebar when the icon is selected
     const toggleSidebar = () => {
         setBigSidebar(!bigSidebar);
         if (sideBarType === "short-home-content") {
@@ -90,29 +102,36 @@ function HomePage() {
         }
     }
 
+    //expression to control session starting time input
     const serviceStartingTimeFunc = (e) => {
         setServiceStartingTime(e.target.value);
         if (invalidStart) setInvalidStart(false);
         if (serviceAlreadyStarted) setServiceAlreadyStarted(false);
     }
+
+    //expression to control session ending time input
     const serviceEndingTimeFunc = (e) => {
         setServiceEndingTime(e.target.value);
         if (invalidStart) setInvalidStart(false);
         if (serviceAlreadyStarted) setServiceAlreadyStarted(false);
     }
 
+    //expressions to handle hovering over any of the sidebar menu items
     const currentServiceHoverFunc = (cond) => {
         if (cond === "on") setCurrentServiceHover(true);
         else if (cond === "off") setCurrentServiceHover(false);
     }
+
     const editHoverFunc = (cond) => {
         if (cond === "on") setEditHover(true);
         else if (cond === "off") setEditHover(false);
     }
+
     const sessionAnalyzerHoverFunc = (cond) => {
         if (cond === "on") setAnalyzerHover(true);
         else if (cond === "off") setAnalyzerHover(false);
     }
+
     const settingsHoverFunc = (cond) => {
         if (cond === "on") setSettingsHover(true);
         else if (cond === "off") setSettingsHover(false);
@@ -120,6 +139,7 @@ function HomePage() {
 
     return (
         <div className="home-container">
+            {/**header of the homepage */}
             <header className="home-header">
                 <div onClick={() => toggleSidebar()} className="open-sidebar-div">
                     <FaBars color="white" size={30}></FaBars>
@@ -130,7 +150,7 @@ function HomePage() {
                     </div>
                 </div>
             </header>
-            {
+            {/**check if the big sidebar should be activated or the small sidebar should be activated */
                 bigSidebar ?
                     (
                         <div className="sidebar">
@@ -149,6 +169,8 @@ function HomePage() {
                         </div>
                     )
             }
+            {/**the "sideBarType" variable will help identify which CSS attribute should be used 
+             * for the homepage content considering the type of sidebar being activated  */}
             <div className={sideBarType}>
                 <div className="home-content-background-decoration">
                 </div>
@@ -167,7 +189,8 @@ function HomePage() {
                             <div onClick={() => startNewService()} className="start-service-button">Start</div>
                         </div>
                     </div>
-                    {
+                    { /**check if service has already been started or input is incorrect 
+                     * and return the respective error */
                         serviceAlreadyStarted ?
                             (<div className="start-view-error">Oops! <span role="img" aria-label="Thinking">🤔</span> Service already started</div>)
                             :
@@ -186,7 +209,7 @@ function HomePage() {
                     <div className="view-service-button-div">
                         <div onClick={() => handleViewService()} className="view-service-button">View</div>
                     </div>
-                    {
+                    { /**check if date input is correct before viewing service information */
                         invalidView ?
                             <div className="start-view-error">Oops! <span role="img" aria-label="EyesUp">🙄</span> Fill all inputs appropriately</div>
                             :
