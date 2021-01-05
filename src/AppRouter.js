@@ -6,6 +6,7 @@ import EditPage from './AppPages/EditPage';
 import Analyzer from './AppPages/Analyzer';
 import AttendeeTabs from './AppPages/AttendeeTabs';
 import SettingsPage from './AppPages/SettingsPage';
+import AboutPage from './AppPages/AboutPage';
 
 const AppRouter = () => (
     <HashRouter >
@@ -27,6 +28,9 @@ const AppRouter = () => (
             </Route>
             <Route exact path="/settings">
                 <SettingsPage />
+            </Route>
+            <Route exact path="/about">
+                <AboutPage />
             </Route>
         </Switch>
     </HashRouter>

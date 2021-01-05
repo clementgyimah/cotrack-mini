@@ -7,7 +7,7 @@ const Menu = electron.Menu;
 const BrowserWindow = electron.BrowserWindow;
 const fs = require('fs');
 const isDev = require('electron-is-dev');
-const { ipcMain } = require('electron');
+const { ipcMain, shell } = require('electron');
 
 // Enable live reload for Electron during development mode
 if (isDev) {
@@ -49,6 +49,7 @@ let editWindow;
 let analyzerWindow;
 let tabsWindow;
 let settingsWindow;
+let aboutWindow;
 
 //tweaking the current date to conform to a pattern like "2020-09-15"
 var currDate;
@@ -74,6 +75,7 @@ function createWindow() {
     analyzerWindow = new BrowserWindow({ width: 950, height: 850, minWidth: 950, minHeight: 350, parent: mainWindow, show: false, webPreferences: { nodeIntegration: true } });
     tabsWindow = new BrowserWindow({ width: 950, height: 850, minWidth: 950, minHeight: 350, parent: mainWindow, show: false, webPreferences: { nodeIntegration: true } });
     settingsWindow = new BrowserWindow({ width: 950, height: 850, minWidth: 750, minHeight: 550, parent: mainWindow, show: false, webPreferences: { nodeIntegration: true } });
+    aboutWindow = new BrowserWindow({ width: 550, height: 450, resizable: false, parent: mainWindow, show: false, webPreferences: { nodeIntegration: true } });
 
     mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${__dirname}/index.html`);
     sessionWindow.loadURL(isDev ? 'http://localhost:3000/#/sessioninfo' : `file://${__dirname}/index.html#/sessioninfo`);
@@ -81,6 +83,7 @@ function createWindow() {
     analyzerWindow.loadURL(isDev ? 'http://localhost:3000/#/analyzer' : `file://${__dirname}/index.html#/analyzer`);
     tabsWindow.loadURL(isDev ? 'http://localhost:3000/#/tabspage' : `file://${__dirname}/index.html#/tabspage`);
     settingsWindow.loadURL(isDev ? 'http://localhost:3000/#/settings' : `file://${__dirname}/index.html#/settings`);
+    aboutWindow.loadURL(isDev ? 'http://localhost:3000/#/about' : `file://${__dirname}/index.html#/about`);
 
     //Set main window to null when closed. Meaning the whole app will stop running
     mainWindow.on('closed', () => mainWindow = null);
@@ -142,6 +145,18 @@ function createWindow() {
     settingsWindow.on('show', (e) => {
         e.preventDefault();
         settingsWindow.reload();
+    })
+
+    //Hide the about window when closed. This will help the window correctly open again without errors when opened again before closing the main window.
+    aboutWindow.on('close', (e) => {
+        e.preventDefault();
+        aboutWindow.hide();
+    })
+
+    aboutWindow.on('show', (e) => {
+        e.preventDefault();
+        aboutWindow.reload();
+        aboutWindow.setMenu(null);
     })
 
 }
@@ -206,6 +221,11 @@ ipcMain.on('open-edit-window', async (event, arg) => {
 //event emitter used to open the settings window when on or activated
 ipcMain.on('open-settings-window', async (event, arg) => {
     settingsWindow.show();
+});
+
+//event emitter used to open the about window when on or activated
+ipcMain.on('open-about-window', async (event, arg) => {
+    aboutWindow.show();
 });
 
 //event emitter used to search for the church name from the database
@@ -727,6 +747,21 @@ ipcMain.on('delete-service', async (event, arg) => {
     return await analyzerWindow.reload();
 })
 
+//event emitter used to open Clemotec website in the OS default browser
+ipcMain.on('open-clemotec', async (event, arg) => {
+    await shell.openExternal("https://clemotecghana.000webhostapp.com");
+})
+
+//event emitter used to open Clemotec apps and updates on the Clemotec webiste
+ipcMain.on('open-updates', async (event, arg) => {
+    await shell.openExternal("https://clemotecghana.000webhostapp.com#clemotec-apps")
+})
+
+//event emitter used to close the About window
+ipcMain.on('close-about-window', async (event, arg) => {
+    aboutWindow.close();
+})
+
 //Extra functions for clean code
 
 //function to take care of adding new attendee to the database
@@ -877,6 +912,11 @@ async function takeCareOfPrinterPrinting() {
     console.log('Hello Clement. Print with a printer');
 }
 
+//function to show the about page
+async function showAboutPage() {
+    aboutWindow.show()
+}
+
 //Menu templates used in the application
 
 //template for general menu
@@ -915,6 +955,8 @@ const generalTemplate = [
                 ])
         ]
     },
+    //The View menu item below is mainly needed during development
+    /*
     {
         label: 'View',
         submenu: [
@@ -929,6 +971,7 @@ const generalTemplate = [
             { role: 'togglefullscreen' }
         ]
     },
+    */
     {
         label: 'Window',
         submenu: [
@@ -939,6 +982,12 @@ const generalTemplate = [
             ] : [
                     { role: 'close' }
                 ])
+        ]
+    },
+    {
+        label: "Help",
+        submenu: [
+            { label: "About", click: () => showAboutPage() }
         ]
     }
 ]
@@ -951,6 +1000,8 @@ const printTemplate = [
             isMac ? { role: 'close' } : { role: 'quit' }
         ]
     },
+    //The Edit menu item below is not needed on the Session Info page
+    /*
     {
         label: 'Edit',
         submenu: [
@@ -979,6 +1030,9 @@ const printTemplate = [
                 ])
         ]
     },
+    */
+    //The View menu item below is mainly needed during development
+    /*
     {
         label: 'View',
         submenu: [
@@ -993,6 +1047,7 @@ const printTemplate = [
             { role: 'togglefullscreen' }
         ]
     },
+    */
     {
         label: 'Window',
         submenu: [
@@ -1010,6 +1065,12 @@ const printTemplate = [
         submenu: [
             { label: "as PDF",/* icon: 'src/Assets/images/printer1.png',*/ click: () => takeCareOfPDFPrinting() },
             { label: "with Printer", click: () => takeCareOfPrinterPrinting() }
+        ]
+    },
+    {
+        label: "Help",
+        submenu: [
+            { label: "About", click: () => showAboutPage() }
         ]
     }
 ]

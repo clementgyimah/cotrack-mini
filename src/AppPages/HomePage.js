@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import '../Assets/css/HomePage.css';
 import { FaTools, FaBars, FaWindowMaximize, FaEdit, FaMedapps } from 'react-icons/fa';
-const { ipcRenderer } = window.require('electron')
+const { ipcRenderer } = window.require('electron');
 
 function HomePage() {
     //declaration of state variables
