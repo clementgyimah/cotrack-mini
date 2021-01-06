@@ -1,1 +1,1 @@
-A cross-platform desktop application for attendance monitoring and Covid-19 tracking in churches. This mini version is meant for churches that do only one service during a church day
+Cotrack Mini is a free version of Cotrack. Cotrack is a full church management software. It works both offline and online. It has a lot of features that make church management very easy no matter the church population. This repository is a deskop application of Cotrack Mini, designed with Electron framework
