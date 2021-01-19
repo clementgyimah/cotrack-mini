@@ -29,10 +29,10 @@ if (isDev) {
 }
 else {
     if (isWindows) {
-        dbPath = electron.app.getPath('documents') + "/.Cotrack-mini/db";
+        dbPath = electron.app.getPath('documents') + "/.Cotrack/db";
     }
     else {
-        dbPath = electron.app.getPath('home') + "/.Cotrack-mini/db";
+        dbPath = electron.app.getPath('home') + "/.Cotrack/db";
     }
 }
 const Datastore = require('nedb');
@@ -857,8 +857,8 @@ async function takeCareOfPDFPrinting() {
         if (err) return console.log(err);
         else if (doc) {
             const tempDate = doc.tempDate;
-            if (fs.existsSync(downloadsPath + '/Cotrack-mini')) {
-                const pdfPath = downloadsPath + "/Cotrack-mini/" + tempDate + ".pdf";
+            if (fs.existsSync(downloadsPath + '/Cotrack')) {
+                const pdfPath = downloadsPath + "/Cotrack/" + tempDate + ".pdf";
                 //options for the pdf to be printed
                 var options = {
                     marginsType: 0,
@@ -878,10 +878,10 @@ async function takeCareOfPDFPrinting() {
                 })
             }
             else {
-                await fs.mkdir(downloadsPath + '/Cotrack-mini', async (err) => {
+                await fs.mkdir(downloadsPath + '/Cotrack', async (err) => {
                     if (err) return console.log(err);
                     else {
-                        const pdfPath = downloadsPath + "/Cotrack-mini/" + tempDate + ".pdf";
+                        const pdfPath = downloadsPath + "/Cotrack/" + tempDate + ".pdf";
                         //options for the pdf to be printed
                         var options = {
                             marginsType: 0,
