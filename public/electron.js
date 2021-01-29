@@ -29,7 +29,7 @@ if (isDev) {
 }
 else {
     if (isWindows) {
-        dbPath = electron.app.getPath('documents') + "/.ctkm/db";
+        dbPath = electron.app.getPath('documents') + "/ctkm/db";
     }
     else {
         dbPath = electron.app.getPath('home') + "/.ctkm/db";
