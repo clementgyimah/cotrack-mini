@@ -31,6 +31,9 @@ else {
     if (isWindows) {
         dbPath = electron.app.getPath('documents') + "/ctkm/db";
     }
+    else if (isMac) {
+        dbPath = electron.app.getPath('home') + "/ctkm/db";
+    }
     else {
         dbPath = electron.app.getPath('home') + "/.ctkm/db";
     }
