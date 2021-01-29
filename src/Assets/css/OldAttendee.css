@@ -92,14 +92,14 @@
 }
 
 .old-attendee-table-thread-tr-th {
-    font-size: 18px;
+    font-size: 15px;
     color: white;
     border: solid 3px #387C44;
     background-color: #387C44;
 }
 
 .old-attendee-table-tbody-tr-td {
-    font-size: 15px;
+    font-size: 12px;
     border-right: solid 0px #387C44;
     border-left: solid 0px #387C44;
 }

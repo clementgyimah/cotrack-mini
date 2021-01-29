@@ -13,6 +13,9 @@ export default function SessionInfo() {
   const [sessionHolder, setSessionHolder] = useState([]);
   const [dateHolder, setDateHolder] = useState("");
   const [timeHolder, setTimeHolder] = useState({});
+  const [totalHolder, setTotalHolder] = useState("");
+  const [maleHolder, setMaleHolder] = useState("");
+  const [femaleHolder, setFemaleHolder] = useState("");
 
   useEffect(() => {
     //react hook that starts first when component mounts
@@ -28,7 +31,10 @@ export default function SessionInfo() {
       ipcRenderer.send('search-tempDate');
       ipcRenderer.on('search-tempDate-reply', async (event, arg) => {
         if (arg) {
-          await setDateHolder(arg);
+          await setDateHolder(arg.theTempDate);
+          await setTotalHolder(arg.theTotal);
+          await setMaleHolder(arg.theMales);
+          setFemaleHolder(arg.theFemales)
         }
       })
     }
@@ -47,10 +53,16 @@ export default function SessionInfo() {
             (
               <div>
                 <div className="time-div">
-                  <div className="specific-time-div">Start Time: {timeHolder.start}</div>
-                  <div className="specific-time-div">End Time: {timeHolder.end}</div>
+                  <div className="specific-number-div">Total: {totalHolder}</div>
+                  <div className="specific-number-div">Males: {maleHolder}</div>
+                  <div className="specific-number-div">Females: {femaleHolder}</div>
+                </div>
+                <div className="time-div">
+                  <div className="view-time-div">Start Time: {timeHolder.start}</div>
+                  <div className="view-time-div">End Time: {timeHolder.end}</div>
                 </div>
                 {/**table div */}
+                <div className="main-table-container">
                 <div className="session-info-table-div">
                   <table className="session-info-table" rules="all">
                     <thead className="session-info-table-thread">
@@ -84,6 +96,7 @@ export default function SessionInfo() {
                       }
                     </tbody>
                   </table>
+                </div>
                 </div>
               </div>
             )

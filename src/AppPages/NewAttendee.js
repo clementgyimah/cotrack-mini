@@ -19,6 +19,7 @@ export default function NewAttendee(props) {
   const [activateEmail, setActivateEmail] = useState(true);
   const [activateContact, setActivateContact] = useState(true);
   const [activateLocation, setActivateLocation] = useState(true);
+  const [invalidEmail, setInvalidEmail] = useState(false)
 
   const onSubmit = () => {
     //variables to hold attendee details
@@ -62,25 +63,28 @@ export default function NewAttendee(props) {
               else {
                 if (emailAddress.indexOf('@') < 0) setInvalidAdd(true);
                 else {
-                  const attendeeDetails = {
-                    firstName,
-                    lastName,
-                    gender,
-                    location,
-                    contactNumber,
-                    emailAddress,
-                    temperature
+                  if (emailAddress.length > 25) setInvalidEmail(true);
+                  else {
+                    const attendeeDetails = {
+                      firstName,
+                      lastName,
+                      gender,
+                      location,
+                      contactNumber,
+                      emailAddress,
+                      temperature
+                    }
+                    ipcRenderer.send("new-attendee", attendeeDetails);
+                    ipcRenderer.on('new-attendee-reply', (event, arg) => {
+                      setAttendeeAlreadyExist(arg);
+                    })
+                    setFirstName("");
+                    setLastName("");
+                    setLocation("");
+                    setContactNumber("");
+                    setEmailAddress("");
+                    setTemperature("");
                   }
-                  ipcRenderer.send("new-attendee", attendeeDetails);
-                  ipcRenderer.on('new-attendee-reply', (event, arg) => {
-                    setAttendeeAlreadyExist(arg);
-                  })
-                  setFirstName("");
-                  setLastName("");
-                  setLocation("");
-                  setContactNumber("");
-                  setEmailAddress("");
-                  setTemperature("");
                 }
 
               }
@@ -97,25 +101,28 @@ export default function NewAttendee(props) {
       setInvalidAdd(true);
     }
     else {
-      const attendeeDetails = {
-        firstName,
-        lastName,
-        gender,
-        location,
-        contactNumber,
-        emailAddress,
-        temperature
+      if (emailAddress.length > 25) setInvalidEmail(true);
+      else {
+        const attendeeDetails = {
+          firstName,
+          lastName,
+          gender,
+          location,
+          contactNumber,
+          emailAddress,
+          temperature
+        }
+        ipcRenderer.send("new-attendee", attendeeDetails);
+        ipcRenderer.on('new-attendee-reply', (event, arg) => {
+          setAttendeeAlreadyExist(arg);
+        })
+        setFirstName("");
+        setLastName("");
+        setLocation("");
+        setContactNumber("");
+        setEmailAddress("");
+        setTemperature("");
       }
-      ipcRenderer.send("new-attendee", attendeeDetails);
-      ipcRenderer.on('new-attendee-reply', (event, arg) => {
-        setAttendeeAlreadyExist(arg);
-      })
-      setFirstName("");
-      setLastName("");
-      setLocation("");
-      setContactNumber("");
-      setEmailAddress("");
-      setTemperature("");
     }
   }
 
@@ -124,66 +131,77 @@ export default function NewAttendee(props) {
     setFirstName(e.target.value);
     setAttendeeAlreadyExist(false);
     setInvalidAdd(false);
+    setInvalidEmail(false);
   }
 
   const lastNameFunc = (e) => {
     setLastName(e.target.value);
     setAttendeeAlreadyExist(false);
     setInvalidAdd(false);
+    setInvalidEmail(false);
   }
 
   const genderFunc = (e) => {
     setGender(e.target.value);
     setAttendeeAlreadyExist(false);
     setInvalidAdd(false);
+    setInvalidEmail(false);
   }
 
   const locationFunc = (e) => {
     setLocation(e.target.value);
     setAttendeeAlreadyExist(false);
     setInvalidAdd(false);
+    setInvalidEmail(false);
   }
 
   const contactNumberFunc = (e) => {
     setContactNumber(e.target.value);
     setAttendeeAlreadyExist(false);
     setInvalidAdd(false);
+    setInvalidEmail(false);
   }
 
   const emailAddressFunc = (e) => {
     setEmailAddress(e.target.value);
     setAttendeeAlreadyExist(false);
     setInvalidAdd(false);
+    setInvalidEmail(false);
   }
 
   const temperatureFunc = (e) => {
     setTemperature(e.target.value);
     setAttendeeAlreadyExist(false);
     setInvalidAdd(false);
+    setInvalidEmail(false);
   }
-  
+
   const activateTempFunc = () => {
     setActivateTemp(!activateTemp);
     setTemperature("");
     setInvalidAdd(false);
+    setInvalidEmail(false);
   }
 
   const activateEmailFunc = () => {
     setActivateEmail(!activateEmail);
     setEmailAddress("");
     setInvalidAdd(false);
+    setInvalidEmail(false);
   }
 
   const activateContactFunc = () => {
     setActivateContact(!activateContact);
     setContactNumber("");
     setInvalidAdd(false);
+    setInvalidEmail(false);
   }
 
   const activateLocationFunc = () => {
     setActivateLocation(!activateLocation);
     setLocation("");
     setInvalidAdd(false);
+    setInvalidEmail(false);
   }
 
   return (
@@ -255,9 +273,14 @@ export default function NewAttendee(props) {
             (<div className="new-attendee-error">Oops! <span role="img" aria-label="Thinking">🤔</span> Attendee already exists</div>)
             :
             (invalidAdd ?
-              <div className="new-attendee-error">Oops! <span role="img" aria-label="EyesUp">🙄</span> Fill all inputs appropriately</div>
+              (<div className="new-attendee-error">Oops! <span role="img" aria-label="EyesUp">🙄</span> Fill all inputs appropriately</div>)
               :
-              <div></div>)
+              (invalidEmail ?
+                (<div className="new-attendee-error">Oops! <span role="img" aria-label="EyesUp">🙄</span> Email address should have a maximum of 25 characters</div>)
+                :
+                (<div></div>)
+              )
+            )
         }
       </div>
     </div>

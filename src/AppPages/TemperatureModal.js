@@ -79,7 +79,7 @@ export default function TemperatureModal(props) {
     return (
         <div className={showTempModal}>
             <div className="modal-main">
-                <div className="record-temperature-div">Record Temperature</div>
+                <div className="record-temperature-div">Record Attendee</div>
                 {/**error to return in case any input is not correct */
                     attendeeExists ?
                         (

@@ -44,12 +44,6 @@ body {
     font-weight: 900;
 }
 
-
-.quit-btn:hover {
-    background-color: red;
-    cursor: pointer;
-}
-
 .short-sidebar {
     background-color: white;
     margin-top: 50px;
@@ -71,10 +65,6 @@ body {
     padding-bottom: 15px;
     box-sizing: border-box;
     cursor: context-menu;
-}
-
-#short-sidebar-icons {
-    margin-right: 10px;
 }
 
 .sidebar {
@@ -309,4 +299,99 @@ body {
     font-size: 30px;
     padding-left: 5px;
     padding-right: 5px;
+}
+
+.verification-header {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 50px;
+    align-items: center;
+    justify-content: center;
+    color: black;
+    background-color: white;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.295);
+    font-size: 30px;
+    font-weight: 600;
+}
+
+.verification-body {
+    position: fixed;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    top: 50px;
+    /*background-color: yellow;*/
+    height: 300px;
+}
+
+.verification-body strong {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.verification-input-div {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.verification-input {
+    border: solid 2px #387C44;
+    width: 50%;
+    height: 30px;
+    border-radius: 20px;
+    font-size: 20px;
+    display: flex;
+}
+
+.hint-text {
+    color: red;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5px;
+    font-size: 13px;
+}
+
+.verification-button-div {
+    margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.verification-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20%;
+    height: 40px;
+    background-color: #387C44;
+    border-radius: 30px;
+    font-size: 20px;
+    color: white;
+}
+
+.verification-button:hover {
+    cursor: pointer;
+    background-color: #4CC417;
+}
+
+.activate-password-toggle-span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.show-key-text {
+    margin-left: 10px;
+    font-size: 13px;
+    color: #387C44;
 }

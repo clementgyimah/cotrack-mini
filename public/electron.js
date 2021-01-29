@@ -29,10 +29,10 @@ if (isDev) {
 }
 else {
     if (isWindows) {
-        dbPath = electron.app.getPath('documents') + "/.Cotrack/db";
+        dbPath = electron.app.getPath('documents') + "/.ctkm/db";
     }
     else {
-        dbPath = electron.app.getPath('home') + "/.Cotrack/db";
+        dbPath = electron.app.getPath('home') + "/.ctkm/db";
     }
 }
 const Datastore = require('nedb');
@@ -175,6 +175,22 @@ app.on('activate', async () => {
     if (mainWindow === null) {
         await createWindow();
     }
+});
+
+//event emitter to check if the application is unlocked before allowing user access
+ipcMain.on('verify-unlocked', async (event, arg) => {
+    temp.findOne({ _id: 4 }, async (err, doc) => {
+        if (err) return console.log(err);
+        else if (doc) {
+            const verified = true;
+            return await event.reply("verify-unlocked-reply", verified);
+        }
+        else {
+            const verified = false;
+            return await event.reply("verify-unlocked-reply", verified);
+        }
+
+    });
 });
 
 //Show the tabs sessions screen when this event emitter is on or activated
@@ -502,6 +518,32 @@ ipcMain.on('old-attendee-current-session-name', async (event, arg) => {
     })
 });
 
+//event emitter used to verify the key to unlock the application
+ipcMain.on('verify-account-key', async (event, arg) => {
+    const verificationKey = arg;
+    if (verificationKey === "mini->coTraCkdev&Prod.BycTeCh202160422724181510mm!&b@bLn") {
+        temp.findOne({ _id: 4 }, async (err, doc) => {
+            if (err) return console.log(err);
+            else if (doc) {
+                const keyError = false;
+                await event.reply("verify-account-key-reply", keyError);
+                return mainWindow.reload();
+            }
+            else {
+                const keyError = false;
+                await temp.insert({ _id: 4, pdctk: verificationKey });
+                await event.reply("verify-account-key-reply", keyError);
+                return mainWindow.reload();
+            }
+
+        });
+    }
+    else {
+        const keyError = true;
+        return await event.reply("verify-account-key-reply", keyError)
+    }
+})
+
 //record an old attendee's temperature when this event emitter is on or activated
 ipcMain.on('record-attendee-temperature', async (event, arg) => {
     //variables to hold attendee details
@@ -583,13 +625,29 @@ ipcMain.on('open-session', async (event, arg) => {
 
 
 //search for the date that was entered in the frontend to view the session info
-//This date is stored in the database
+//Data like number of attendee for that date, number of males and number of females go with it
 ipcMain.on('search-tempDate', async (event, arg) => {
     await temp.findOne({ _id: 1 }, async (err, doc) => {
         if (err) return console.log(err);
         else if (doc) {
             const tempViewDate = doc.tempViewDate;
-            return await event.reply('search-tempDate-reply', tempViewDate);
+            await session.findOne({ _id: tempViewDate }, async (err, doc) => {
+                if (doc) {
+                    var tempHolder;
+                    //loop through the attendee array to check the number of males and females
+                    var maleNum = 0;
+                    var femaleNum = 0;
+                    tempHolder = doc.session.attendee;
+                    for (var j = 0; j < tempHolder.length; j++) {
+                        if (tempHolder[j].gender === "Male") maleNum += 1;
+                        else femaleNum += 1;
+                    }
+
+                    const viewSessionDetails = {theTempDate: tempViewDate, theTotal: tempHolder.length, theMales: maleNum, theFemales: femaleNum}
+                    return await event.reply('search-tempDate-reply', viewSessionDetails);
+                }
+
+            })
         }
     })
 })
@@ -830,7 +888,6 @@ async function putNewDate(startingTime, endingTime) {
     }
     await session.insert(doc, (err, newDoc) => {
         if (err) return console.log(err);
-        console.log("New Date added to the database");
     })
     return;
 }
@@ -857,8 +914,8 @@ async function takeCareOfPDFPrinting() {
         if (err) return console.log(err);
         else if (doc) {
             const tempDate = doc.tempDate;
-            if (fs.existsSync(downloadsPath + '/Cotrack')) {
-                const pdfPath = downloadsPath + "/Cotrack/" + tempDate + ".pdf";
+            if (fs.existsSync(downloadsPath + '/Cotrack-mini')) {
+                const pdfPath = downloadsPath + "/Cotrack-mini/" + tempDate + ".pdf";
                 //options for the pdf to be printed
                 var options = {
                     marginsType: 0,
@@ -878,10 +935,10 @@ async function takeCareOfPDFPrinting() {
                 })
             }
             else {
-                await fs.mkdir(downloadsPath + '/Cotrack', async (err) => {
+                await fs.mkdir(downloadsPath + '/Cotrack-mini', async (err) => {
                     if (err) return console.log(err);
                     else {
-                        const pdfPath = downloadsPath + "/Cotrack/" + tempDate + ".pdf";
+                        const pdfPath = downloadsPath + "/Cotrack-mini/" + tempDate + ".pdf";
                         //options for the pdf to be printed
                         var options = {
                             marginsType: 0,

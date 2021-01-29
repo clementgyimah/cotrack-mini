@@ -28,7 +28,7 @@ export default function AboutPage() {
             <img alt="cotrack-logo" src={logo} className="cotrack-logo" width={150} height={150}></img>
             <div className="cotrack-title">Cotrack Mini 1.0.0</div>
             <div className="cotrack-description">
-                <p>Cotrack Mini is a free version of Cotrack.</p>
+                <p>Cotrack Mini is a mini version of Cotrack.</p>
                 <p>Cotrack is a church management software.</p>
                 <p>Sponsored by <span className="clemotec-link" onClick = {() => openClemotec()}> Clemotec Inc. </span></p>
                 <p>Developed by Gyimah Clement</p>
