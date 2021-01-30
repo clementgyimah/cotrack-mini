@@ -14,6 +14,7 @@ export default function EditAttendeeModal(props) {
     const [editLocation, setEditLocation] = useState("");
     const [editContactNumber, setEditContactNumber] = useState("");
     const [editEmailAddress, setEditEmailAddress] = useState("");
+    const [isNewAttendee, setIsNewAttendee] = useState(false);
 
     //react hook that starts first when component mounts or any of the varibales in the array changes
     useEffect(() => {
@@ -26,10 +27,11 @@ export default function EditAttendeeModal(props) {
             setEditLocation(props.cLocation);
             setEditContactNumber(props.cContactNumber);
             setEditEmailAddress(props.cEmailAddress);
+            setIsNewAttendee(props.newAttendeeAdd);
             setInvalidDetails(false);
         }
         return () => isSubscribed = false;
-    }, [props.cId, props.cContactNumber, props.cGender, props.cEmailAddress, props.cFirstName, props.cLastName, props.cLocation, showEditModal])
+    }, [props.cId, props.cContactNumber, props.cGender, props.cEmailAddress, props.cFirstName, props.cLastName, props.cLocation, showEditModal, props.newAttendeeAdd])
 
     //expression to handle sending edited attendee detail(s) to backend
     const handleEditDetails = () => {
@@ -37,17 +39,34 @@ export default function EditAttendeeModal(props) {
             setInvalidDetails(true);
         }
         else {
-            const attendeeData = {
-                editId,
-                editFirstName,
-                editLastName,
-                editGender,
-                editLocation,
-                editContactNumber,
-                editEmailAddress
+            if (isNewAttendee) {
+                const attendeeData = {
+                    editId,
+                    editFirstName,
+                    editLastName,
+                    editGender,
+                    editLocation,
+                    editContactNumber,
+                    editEmailAddress
+                }
+                ipcRenderer.send('add-attendee-details', attendeeData);
+                setIsNewAttendee(false);
+                return props.handleClose();
             }
-            ipcRenderer.send('edit-attendee-details', attendeeData);
-            return props.handleClose();
+            else {
+                const attendeeData = {
+                    editId,
+                    editFirstName,
+                    editLastName,
+                    editGender,
+                    editLocation,
+                    editContactNumber,
+                    editEmailAddress
+                }
+                ipcRenderer.send('edit-attendee-details', attendeeData);
+                setIsNewAttendee(false);
+                return props.handleClose();
+            }
         }
     }
 
@@ -79,6 +98,7 @@ export default function EditAttendeeModal(props) {
 
     const handleCloseModal = () => {
         setInvalidDetails(false);
+        setIsNewAttendee(false);
         return props.handleClose();
     }
 

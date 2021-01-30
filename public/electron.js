@@ -754,7 +754,15 @@ ipcMain.on('open-analysis-window', async (event, arg) => {
     await analyzerWindow.show();
 })
 
-//event emitter used to update attendee details in the database 
+//event emitter used to insert new attendee details into the database
+ipcMain.on('add-attendee-details', async (event, arg) => {
+    
+    await attendee.insert({ firstName: arg.editFirstName, lastName: arg.editLastName, gender: arg.editGender, location: arg.editLocation, contactNumber: arg.editContactNumber, emailAddress: arg.editEmailAddress });
+    await editWindow.reload();
+    return await tabsWindow.reload();
+})
+
+//event emitter used to update attendee details into the database 
 ipcMain.on('edit-attendee-details', async (event, arg) => {
     await attendee.update({ _id: arg.editId }, { $set: { firstName: arg.editFirstName, lastName: arg.editLastName, gender: arg.editGender, location: arg.editLocation, contactNumber: arg.editContactNumber, emailAddress: arg.editEmailAddress } }, async (err) => {
         if (err) return console.log(err);

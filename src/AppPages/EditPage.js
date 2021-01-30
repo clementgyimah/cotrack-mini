@@ -18,6 +18,7 @@ export default function EditPage() {
   const [editLocation, setEditLocation] = useState("");
   const [editContactNumber, setEditContactNumber] = useState("");
   const [editEmailAddress, setEditEmailAddress] = useState("");
+  const [addNewAttendee, setAddNewAttendee] = useState(false);
 
   //react hook that starts first when component mounts
   useEffect(() => {
@@ -57,6 +58,7 @@ export default function EditPage() {
     setEditLocation(location);
     setEditContactNumber(contactNumber);
     setEditEmailAddress(emailAddress);
+    setAddNewAttendee(false);
     setShowEditModal(true);
   }
 
@@ -70,16 +72,33 @@ export default function EditPage() {
     ipcRenderer.send('delete-attendee', id);
   }
 
+  //expression to open Edit Attendee modal and add a new attendee
+  const openAddNewAttendeeModal = () => {
+    setEditId("")
+    setEditFirstName("");
+    setEditLastName("");
+    setEditGender("");
+    setEditLocation("");
+    setEditContactNumber("");
+    setEditEmailAddress("");
+    setAddNewAttendee(true);
+    setShowEditModal(true);
+  }
+
   return (
     <div className="old-attendee-container">
       {/** edit attendee modal component call */}
-      <EditAttendeeModal show={showEditModal} handleClose={() => closeTempModal()} cId={editId} cFirstName={editFirstName} cLastName={editLastName} cGender={editGender} cLocation={editLocation} cContactNumber={editContactNumber} cEmailAddress={editEmailAddress} />
+      <EditAttendeeModal show={showEditModal} newAttendeeAdd={addNewAttendee} handleClose={() => closeTempModal()} cId={editId} cFirstName={editFirstName} cLastName={editLastName} cGender={editGender} cLocation={editLocation} cContactNumber={editContactNumber} cEmailAddress={editEmailAddress} />
       <div className="edit-header">Edit Attendee</div>
       {/**search input div */}
       <div className="search-input-div">
         <input className="search-input" type="text"
           placeholder="Type something to search for attendee(s)"
           onChange={searchChange} />
+      </div>
+      {/**add new attendee div */}
+      <div className="add-new-attendee-button-div">
+        <div onClick={() => openAddNewAttendeeModal()} className="add-new-attendee-button">+ Add Attendee</div>
       </div>
       {/**table div */}
       <div className="old-attendee-table-div">

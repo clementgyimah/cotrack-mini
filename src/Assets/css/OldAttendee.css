@@ -135,3 +135,27 @@
     color: red;
     font-size: 30px;
 }
+
+.add-new-attendee-button-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.add-new-attendee-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 20%;
+    height: 30px;
+    background-color: #387C44;
+    border-radius: 20px;
+    font-size: 20px;
+    color: white;
+}
+
+.add-new-attendee-button:hover {
+    cursor: pointer;
+    background-color: #4CC417;
+}
