@@ -377,6 +377,33 @@ ipcMain.on('new-attendee', async (event, arg) => {
             var locationParam;
             var contactParam;
             var emailParam;
+            
+            selectedAttendee.forEach(async (eachSelectedAttendee, eleIndex) => {
+                firstParam = eachSelectedAttendee.firstName.split(" ").join("").toLowerCase();
+                secondParam = eachSelectedAttendee.lastName.split(" ").join("").toLowerCase();
+                genderParam = eachSelectedAttendee.gender.split(" ").join("").toLowerCase();
+                locationParam = eachSelectedAttendee.location.split(" ").join("").toLowerCase();
+                contactParam = eachSelectedAttendee.contactNumber.split(" ").join("").toLowerCase();
+                emailParam = eachSelectedAttendee.emailAddress.split(" ").join("").toLowerCase();
+                if (firstParam === firstName.toLowerCase() && secondParam === lastName.toLowerCase() && genderParam === gender.toLowerCase() && locationParam === location.toLowerCase() && contactParam === contactNumber.toLowerCase() && emailParam === emailAddress.toLowerCase()) {
+                    const attendeeAlreadyExist = true;
+                    await event.reply('new-attendee-reply', attendeeAlreadyExist);
+                }
+                else if (eleIndex === (selectedAttendee.length - 1)) {
+                    const attendeeAlreadyExist = false;
+                    await newAttendee(generatedDetails)
+                        .catch(function (err) {
+                            console.log(err)
+                        })
+                    await event.reply('new-attendee-reply', attendeeAlreadyExist);
+                    await sessionWindow.reload();
+                    await analyzerWindow.reload();
+                    await editWindow.reload();
+                }
+            })
+            
+            //The imperative style below has been changed to declarative style above
+            /*
             for (var i = 0; i < selectedAttendee.length; i++) {
                 firstParam = selectedAttendee[i].firstName.split(" ").join("").toLowerCase();
                 secondParam = selectedAttendee[i].lastName.split(" ").join("").toLowerCase();
@@ -400,6 +427,7 @@ ipcMain.on('new-attendee', async (event, arg) => {
                     return await editWindow.reload();
                 }
             }
+            */
         }
     })
 })
@@ -487,11 +515,19 @@ ipcMain.on('old-attendee-name', async (event, arg) => {
         else {
             var currentArray = []
             const gottenSessions = nameObj;
+            gottenSessions.forEach(eachGottenSession => {
+                if (eachGottenSession.firstName.toLowerCase().indexOf(searchName) >= 0 || eachGottenSession.lastName.toLowerCase().indexOf(searchName) >= 0) {
+                    currentArray.push(eachGottenSession);
+                }
+            })
+            //The imperative style below has been changed to declarative style above
+            /*
             for (var j = 0; j < gottenSessions.length; j++) {
                 if (gottenSessions[j].firstName.toLowerCase().indexOf(searchName) >= 0 || gottenSessions[j].lastName.toLowerCase().indexOf(searchName) >= 0) {
                     currentArray.push(gottenSessions[j]);
                 }
             }
+            */
             return await event.reply('old-attendee-name-reply', currentArray);
         }
     });
@@ -509,11 +545,19 @@ ipcMain.on('old-attendee-current-session-name', async (event, arg) => {
                 else {
                     var currentArray = []
                     const gottenAttendees = doc.session.attendee;
+                    gottenAttendees.forEach(eachGottenAttendee => {
+                        if (eachGottenAttendee.firstName.toLowerCase().indexOf(searchName) >= 0 || eachGottenAttendee.lastName.toLowerCase().indexOf(searchName) >= 0) {
+                            currentArray.push(eachGottenAttendee);
+                        }
+                    });
+                    //The imperative style below has been changed to declarative style above
+                    /*
                     for (var j = 0; j < gottenAttendees.length; j++) {
                         if (gottenAttendees[j].firstName.toLowerCase().indexOf(searchName) >= 0 || gottenAttendees[j].lastName.toLowerCase().indexOf(searchName) >= 0) {
                             currentArray.push(gottenAttendees[j]);
                         }
                     }
+                    */
                     return await event.reply('old-attendee-current-session-name-reply', currentArray);
                 }
             });
@@ -589,6 +633,25 @@ ipcMain.on('record-attendee-temperature', async (event, arg) => {
                     return await sessionWindow.reload();
                 }
                 else {
+                    theAttendeesArray.attendee.forEach(async (eachAttendeeObj, ind) => {
+                        if (eachAttendeeObj.firstName === firstName && eachAttendeeObj.lastName === lastName && eachAttendeeObj.gender === gender && eachAttendeeObj.location === location && eachAttendeeObj.contactNumber === contactNumber && eachAttendeeObj.emailAddress === emailAddress) {
+                            const attendeeExists = true
+                            await event.reply('record-attendee-temperature-reply', attendeeExists);
+                        }
+                        else if (ind === (theAttendeesArray.attendee.length) - 1) {
+                            const attendeeExists = false
+                            await theAttendeesArray.attendee.push(sessionAttendeeDetails);
+                            await session.update({ _id: theTempDate }, { $set: { session: theAttendeesArray } }, async (err) => {
+                                if (err) return console.log(err);
+                                return;
+                            })
+                            await event.reply('record-attendee-temperature-reply', attendeeExists);
+                            await analyzerWindow.reload();
+                            await sessionWindow.reload();
+                        }
+                    })
+                    //The imperative style below has been changed to declarative style above
+                    /*
                     for (var j = 0; j < theAttendeesArray.attendee.length; j++) {
                         if (theAttendeesArray.attendee[j].firstName === firstName && theAttendeesArray.attendee[j].lastName === lastName && theAttendeesArray.attendee[j].gender === gender && theAttendeesArray.attendee[j].location === location && theAttendeesArray.attendee[j].contactNumber === contactNumber && theAttendeesArray.attendee[j].emailAddress === emailAddress) {
                             const attendeeExists = true
@@ -606,6 +669,7 @@ ipcMain.on('record-attendee-temperature', async (event, arg) => {
                             return await sessionWindow.reload();
                         }
                     }
+                    */
                 }
 
 
@@ -641,11 +705,17 @@ ipcMain.on('search-tempDate', async (event, arg) => {
                     var maleNum = 0;
                     var femaleNum = 0;
                     tempHolder = doc.session.attendee;
+                    tempHolder.forEach(eachHolder => {
+                        if (eachHolder.gender === "Male") maleNum += 1;
+                        else femaleNum += 1; 
+                    })
+                    //The imperative style below has been changed to declarative style above
+                    /*
                     for (var j = 0; j < tempHolder.length; j++) {
                         if (tempHolder[j].gender === "Male") maleNum += 1;
                         else femaleNum += 1;
                     }
-
+                    */
                     const viewSessionDetails = {theTempDate: tempViewDate, theTotal: tempHolder.length, theMales: maleNum, theFemales: femaleNum}
                     return await event.reply('search-tempDate-reply', viewSessionDetails);
                 }
@@ -673,11 +743,32 @@ ipcMain.on('analysis-data', async (event, arg) => {
         if (doc) {
             var tempDoc = [];
             var tempHolder;
+            doc.forEach(async eachDoc => {
+                //push each object of the analysis data into the array "tempDoc" using the format below
+                await tempDoc.push({ "_id": eachDoc._id, "maleNum": 0, "femaleNum": 0, "start": eachDoc.session.start, "end": eachDoc.session.end, "attendeeeNum": eachDoc.session.attendee.length })
+            })
+            //The imperative style below has been changed to declarative style above
+            /*
             for (var k = 0; k < doc.length; k++) {
                 //push each object of the analysis data into the array "tempDoc" using the format below
                 await tempDoc.push({ "_id": doc[k]._id, "maleNum": 0, "femaleNum": 0, "start": doc[k].session.start, "end": doc[k].session.end, "attendeeeNum": doc[k].session.attendee.length })
             }
+            */
             //loop through the data of all sessions to check the number of males and females
+            doc.forEach((eachDoc, ind) => {
+                var maleNum = 0;
+                var femaleNum = 0;
+                tempHolder = eachDoc.session.attendee;
+                tempHolder.forEach(eachTempDoc => {
+                    if (eachTempDoc.gender === "Male") maleNum += 1;
+                    else femaleNum += 1;
+                })
+                tempDoc[ind].maleNum = maleNum;
+                tempDoc[ind].femaleNum = femaleNum;
+            })
+
+            //The imperative style below has been changed to declarative style above
+            /*
             for (var i = 0; i < doc.length; i++) {
                 var maleNum = 0;
                 var femaleNum = 0;
@@ -689,7 +780,7 @@ ipcMain.on('analysis-data', async (event, arg) => {
                 tempDoc[i].maleNum = maleNum;
                 tempDoc[i].femaleNum = femaleNum;
             }
-
+            */
             const sessionAvailable = true;
             await event.reply('analysis-data-available-reply', sessionAvailable);
             //await event.reply('analysis-data-gender-reply', genderArray);
@@ -710,12 +801,30 @@ ipcMain.on('analysis-data-search', async (event, arg) => {
     await session.find({}, async (err, doc) => {
         if (err) return console.log(err);
         else {
-
             var tempDoc = [];
             var tempHolder;
+            doc.forEach(async eachDoc => await tempDoc.push({ "_id": eachDoc._id, "maleNum": 0, "femaleNum": 0, "start": eachDoc.session.start, "end": eachDoc.session.end, "attendeeeNum": eachDoc.session.attendee.length }))
+            
+            //The imperative style below has been changed to declarative style above
+            /*
             for (var k = 0; k < doc.length; k++) {
                 await tempDoc.push({ "_id": doc[k]._id, "maleNum": 0, "femaleNum": 0, "start": doc[k].session.start, "end": doc[k].session.end, "attendeeeNum": doc[k].session.attendee.length })
             }
+            */
+           doc.forEach((eachDoc, ind) => {
+            var maleNum = 0;
+            var femaleNum = 0;
+            tempHolder = eachDoc.session.attendee;
+            tempHolder.forEach(eachTempHolder => {
+                if (eachTempHolder.gender === "Male") maleNum += 1;
+                else femaleNum += 1;
+            });
+            tempDoc[ind].maleNum = maleNum;
+            tempDoc[ind].femaleNum = femaleNum;
+           })
+
+            //The imperative style below has been changed to declarative style above
+            /*
             for (var i = 0; i < doc.length; i++) {
                 var maleNum = 0;
                 var femaleNum = 0;
@@ -727,13 +836,21 @@ ipcMain.on('analysis-data-search', async (event, arg) => {
                 tempDoc[i].maleNum = maleNum;
                 tempDoc[i].femaleNum = femaleNum;
             }
-
+            */
             var currentArray = []
+            tempDoc.forEach(async eachDoc => {
+                if (eachDoc._id.toLowerCase().indexOf(searchName) >= 0) {
+                    await currentArray.push(eachDoc);
+                }
+            })
+            //The imperative style below has been changed to declarative style above
+            /*
             for (var l = 0; l < tempDoc.length; l++) {
                 if (tempDoc[l]._id.toLowerCase().indexOf(searchName) >= 0) {
                     await currentArray.push(tempDoc[l]);
                 }
             }
+            */
             return await event.reply('analysis-data-search-reply', currentArray);
         }
     });

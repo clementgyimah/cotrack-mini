@@ -15,6 +15,7 @@ export default function EditAttendeeModal(props) {
     const [editContactNumber, setEditContactNumber] = useState("");
     const [editEmailAddress, setEditEmailAddress] = useState("");
     const [isNewAttendee, setIsNewAttendee] = useState(false);
+    const [invalidEmail, setInvalidEmail] = useState(false);
 
     //react hook that starts first when component mounts or any of the varibales in the array changes
     useEffect(() => {
@@ -38,6 +39,7 @@ export default function EditAttendeeModal(props) {
         if (editFirstName.length === 0 || editLastName.length === 0 || editGender.length === 0 || editLocation.length === 0 || editContactNumber.length === 0 || editEmailAddress.length === 0) {
             setInvalidDetails(true);
         }
+        else if (editEmailAddress > 25) setInvalidEmail(true);
         else {
             if (isNewAttendee) {
                 const attendeeData = {
@@ -108,9 +110,14 @@ export default function EditAttendeeModal(props) {
                 <div className="record-temperature-div">Edit Details</div>
                 {/**check if all inputs are correct */
                     invalidDetails ?
-                        <div className="record-temp-error">Oops! <span role="img" aria-label="EyesGlass">🧐</span> Make sure all inputs are correct</div>
+                        (<div className="record-temp-error">Oops! <span role="img" aria-label="EyesGlass">🧐</span> Make sure all inputs are correct</div>)
                         :
-                        <div></div>
+                        (
+                            invalidEmail ?
+                                (<div className="record-temp-error">Oops! <span role="img" aria-label="EyesGlass">🧐</span> Make sure all inputs are correct</div>)
+                                :
+                                <div></div>
+                        )
                 }
                 {/**form inputs and labels */}
                 <div className="attendee-info-div">
