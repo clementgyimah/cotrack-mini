@@ -26,8 +26,7 @@
     "build-windows": "yarn react-build && electron-builder --win",
     "build-linux": "yarn react-build && electron-builder --linux",
     "build-mac": "yarn react-build && electron-builder --mac",
-    "release": "yarn react-build && electron-builder --publish=always",
-    "cz": "cz"
+    "release": "yarn react-build && electron-builder --publish=always"
   },
   "eslintConfig": {
     "extends": "react-app"
