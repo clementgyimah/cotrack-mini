@@ -2,7 +2,7 @@
   "name": "covid_event_registration",
   "version": "1.0.0",
   "description": "Cotrack is a desktop application used for covid 19 tracking",
-  "author": "Gyimah CLement",
+  "author": "Gyimah Clement",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
