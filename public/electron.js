@@ -7,9 +7,9 @@ const Menu = electron.Menu;
 const BrowserWindow = electron.BrowserWindow;
 const fs = require('fs');
 const isDev = require('electron-is-dev');
-const { ipcMain } = require('electron');
+const { ipcMain, shell } = require('electron');
 
-// Enable live reload for Electron
+// Enable live reload for Electron during development mode
 if (isDev) {
     require('electron-reload')(__dirname, {
         // Note that the path to electron may vary according to the main file
@@ -18,7 +18,7 @@ if (isDev) {
     })
 }
 
-//check which operating system it is
+//variables to check which operating system it is
 const isMac = process.platform === 'darwin';
 const isWindows = process.platform === 'win32';
 
@@ -29,17 +29,19 @@ if (isDev) {
 }
 else {
     if (isWindows) {
-        dbPath = electron.app.getPath('documents') + "/.Cotrack/db";
+        dbPath = electron.app.getPath('documents') + "/ctkm/db";
+    }
+    else if (isMac) {
+        dbPath = electron.app.getPath('home') + "/ctkm/db";
     }
     else {
-        dbPath = electron.app.getPath('home') + "/.Cotrack/db";
+        dbPath = electron.app.getPath('home') + "/.ctkm/db";
     }
 }
 const Datastore = require('nedb');
 const attendee = new Datastore({ filename: dbPath + "/attendee.db", autoload: true });
 const session = new Datastore({ filename: dbPath + "/session.db", autoload: true });
 const temp = new Datastore({ filename: dbPath + "/temp.db", autoload: true });
-
 
 
 //Declaring variables for each app window
@@ -49,6 +51,7 @@ let editWindow;
 let analyzerWindow;
 let tabsWindow;
 let settingsWindow;
+let aboutWindow;
 
 //tweaking the current date to conform to a pattern like "2020-09-15"
 var currDate;
@@ -74,6 +77,7 @@ function createWindow() {
     analyzerWindow = new BrowserWindow({ width: 950, height: 850, minWidth: 950, minHeight: 350, parent: mainWindow, show: false, webPreferences: { nodeIntegration: true } });
     tabsWindow = new BrowserWindow({ width: 950, height: 850, minWidth: 950, minHeight: 350, parent: mainWindow, show: false, webPreferences: { nodeIntegration: true } });
     settingsWindow = new BrowserWindow({ width: 950, height: 850, minWidth: 750, minHeight: 550, parent: mainWindow, show: false, webPreferences: { nodeIntegration: true } });
+    aboutWindow = new BrowserWindow({ width: 550, height: 450, resizable: false, parent: mainWindow, show: false, webPreferences: { nodeIntegration: true } });
 
     mainWindow.loadURL(isDev ? 'http://localhost:3000' : `file://${__dirname}/index.html`);
     sessionWindow.loadURL(isDev ? 'http://localhost:3000/#/sessioninfo' : `file://${__dirname}/index.html#/sessioninfo`);
@@ -81,6 +85,7 @@ function createWindow() {
     analyzerWindow.loadURL(isDev ? 'http://localhost:3000/#/analyzer' : `file://${__dirname}/index.html#/analyzer`);
     tabsWindow.loadURL(isDev ? 'http://localhost:3000/#/tabspage' : `file://${__dirname}/index.html#/tabspage`);
     settingsWindow.loadURL(isDev ? 'http://localhost:3000/#/settings' : `file://${__dirname}/index.html#/settings`);
+    aboutWindow.loadURL(isDev ? 'http://localhost:3000/#/about' : `file://${__dirname}/index.html#/about`);
 
     //Set main window to null when closed. Meaning the whole app will stop running
     mainWindow.on('closed', () => mainWindow = null);
@@ -144,6 +149,18 @@ function createWindow() {
         settingsWindow.reload();
     })
 
+    //Hide the about window when closed. This will help the window correctly open again without errors when opened again before closing the main window.
+    aboutWindow.on('close', (e) => {
+        e.preventDefault();
+        aboutWindow.hide();
+    })
+
+    aboutWindow.on('show', (e) => {
+        e.preventDefault();
+        aboutWindow.reload();
+        aboutWindow.setMenu(null);
+    })
+
 }
 
 //when app is ready to open, open it using the createWindow function
@@ -161,6 +178,22 @@ app.on('activate', async () => {
     if (mainWindow === null) {
         await createWindow();
     }
+});
+
+//event emitter to check if the application is unlocked before allowing user access
+ipcMain.on('verify-unlocked', async (event, arg) => {
+    temp.findOne({ _id: 4 }, async (err, doc) => {
+        if (err) return console.log(err);
+        else if (doc) {
+            const verified = true;
+            return await event.reply("verify-unlocked-reply", verified);
+        }
+        else {
+            const verified = false;
+            return await event.reply("verify-unlocked-reply", verified);
+        }
+
+    });
 });
 
 //Show the tabs sessions screen when this event emitter is on or activated
@@ -206,6 +239,11 @@ ipcMain.on('open-edit-window', async (event, arg) => {
 //event emitter used to open the settings window when on or activated
 ipcMain.on('open-settings-window', async (event, arg) => {
     settingsWindow.show();
+});
+
+//event emitter used to open the about window when on or activated
+ipcMain.on('open-about-window', async (event, arg) => {
+    aboutWindow.show();
 });
 
 //event emitter used to search for the church name from the database
@@ -369,18 +407,29 @@ ipcMain.on('new-attendee', async (event, arg) => {
 //verify if a session has been started for the current date
 //Done by checking if the current date exists. If it exists, there will be a current session started
 ipcMain.on('verify-session-availability', async (event, arg) => {
-    await session.findOne({ _id: currDate }, async (err, doc) => {
+    await temp.findOne({ _id: 2 }, async (err, doc) => {
         if (err) return console.log(err);
         else if (doc) {
-            const sessionAvailable = true;
-            return event.reply('verify-session-availability-reply', sessionAvailable);
+            const theTempDate = doc.tempDate;
+            await session.findOne({ _id: theTempDate }, async (err, doc) => {
+                if (err) return console.log(err);
+                else if (doc) {
+                    const sessionAvailable = true;
+                    return event.reply('verify-session-availability-reply', sessionAvailable);
+                }
+                else {
+                    const sessionAvailable = false;
+                    return event.reply('verify-session-availability-reply', sessionAvailable);
+                }
+
+            })
         }
         else {
             const sessionAvailable = false;
             return event.reply('verify-session-availability-reply', sessionAvailable);
         }
-
     })
+
 })
 
 //event emitter used to search for all attendees who have been registered in the database
@@ -404,6 +453,24 @@ ipcMain.on('old-attendee-current-session-all', async (event, arg) => {
                     const gottenAttendees = doc.session.attendee;
                     await event.reply('sessionTime-reply', { start: doc.session.start, end: doc.session.end });
                     return await event.reply('old-attendee-current-session-all-reply', gottenAttendees);
+                }
+            });
+        }
+    })
+});
+
+//event emitter used to search for all attendees who have been registered in the current session
+//also used to send a the results of the search in the form a reply to the frontend
+ipcMain.on('view-old-attendee-current-session-all', async (event, arg) => {
+    await temp.findOne({ _id: 1 }, async (err, sesObj) => {
+        if (sesObj) {
+            const tempDateValue = sesObj.tempViewDate;
+            await session.findOne({ _id: tempDateValue }, async (err, doc) => {
+                if (err) return console.log(err);
+                else if (doc) {
+                    const gottenAttendees = doc.session.attendee;
+                    await event.reply('view-sessionTime-reply', { start: doc.session.start, end: doc.session.end });
+                    return await event.reply('view-old-attendee-current-session-all-reply', gottenAttendees);
                 }
             });
         }
@@ -454,6 +521,32 @@ ipcMain.on('old-attendee-current-session-name', async (event, arg) => {
     })
 });
 
+//event emitter used to verify the key to unlock the application
+ipcMain.on('verify-account-key', async (event, arg) => {
+    const verificationKey = arg;
+    if (verificationKey === "mini->coTraCkdev&Prod.BycTeCh202160422724181510mm!&b@bLn") {
+        temp.findOne({ _id: 4 }, async (err, doc) => {
+            if (err) return console.log(err);
+            else if (doc) {
+                const keyError = false;
+                await event.reply("verify-account-key-reply", keyError);
+                return mainWindow.reload();
+            }
+            else {
+                const keyError = false;
+                await temp.insert({ _id: 4, pdctk: verificationKey });
+                await event.reply("verify-account-key-reply", keyError);
+                return mainWindow.reload();
+            }
+
+        });
+    }
+    else {
+        const keyError = true;
+        return await event.reply("verify-account-key-reply", keyError)
+    }
+})
+
 //record an old attendee's temperature when this event emitter is on or activated
 ipcMain.on('record-attendee-temperature', async (event, arg) => {
     //variables to hold attendee details
@@ -475,32 +568,19 @@ ipcMain.on('record-attendee-temperature', async (event, arg) => {
         temperature
     }
 
-    return await session.findOne({ _id: currDate }, async (err, doc) => {
+    return await temp.findOne({ _id: 2 }, async (err, doc) => {
         if (err) return console.log(err);
-        //check if the attendee to record his/her temperature is not already stored in the current session.
-        //call the recordAttendeeTemperature function and send a "false" reply to frontend if the attendee does not exist already in the current session
-        var theAttendeesArray = doc.session;
-        if (theAttendeesArray.attendee.length === 0) {
-            const attendeeExists = false
-            await theAttendeesArray.attendee.push(sessionAttendeeDetails);
-            await session.update({ _id: currDate }, { $set: { session: theAttendeesArray } }, async (err) => {
+        else if (doc) {
+            const theTempDate = doc.tempDate;
+            return await session.findOne({ _id: theTempDate }, async (err, doc) => {
                 if (err) return console.log(err);
-                return;
-            })
-            await event.reply('record-attendee-temperature-reply', attendeeExists);
-            await analyzerWindow.reload();
-            return await sessionWindow.reload();
-        }
-        else {
-            for (var j = 0; j < theAttendeesArray.attendee.length; j++) {
-                if (theAttendeesArray.attendee[j].firstName === firstName && theAttendeesArray.attendee[j].lastName === lastName && theAttendeesArray.attendee[j].gender === gender && theAttendeesArray.attendee[j].location === location && theAttendeesArray.attendee[j].contactNumber === contactNumber && theAttendeesArray.attendee[j].emailAddress === emailAddress) {
-                    const attendeeExists = true
-                    return await event.reply('record-attendee-temperature-reply', attendeeExists);
-                }
-                else if (j === (theAttendeesArray.attendee.length) - 1) {
+                //check if the attendee to record his/her temperature is not already stored in the current session.
+                //call the recordAttendeeTemperature function and send a "false" reply to frontend if the attendee does not exist already in the current session
+                var theAttendeesArray = doc.session;
+                if (theAttendeesArray.attendee.length === 0) {
                     const attendeeExists = false
                     await theAttendeesArray.attendee.push(sessionAttendeeDetails);
-                    await session.update({ _id: currDate }, { $set: { session: theAttendeesArray } }, async (err) => {
+                    await session.update({ _id: theTempDate }, { $set: { session: theAttendeesArray } }, async (err) => {
                         if (err) return console.log(err);
                         return;
                     })
@@ -508,11 +588,30 @@ ipcMain.on('record-attendee-temperature', async (event, arg) => {
                     await analyzerWindow.reload();
                     return await sessionWindow.reload();
                 }
-            }
+                else {
+                    for (var j = 0; j < theAttendeesArray.attendee.length; j++) {
+                        if (theAttendeesArray.attendee[j].firstName === firstName && theAttendeesArray.attendee[j].lastName === lastName && theAttendeesArray.attendee[j].gender === gender && theAttendeesArray.attendee[j].location === location && theAttendeesArray.attendee[j].contactNumber === contactNumber && theAttendeesArray.attendee[j].emailAddress === emailAddress) {
+                            const attendeeExists = true
+                            return await event.reply('record-attendee-temperature-reply', attendeeExists);
+                        }
+                        else if (j === (theAttendeesArray.attendee.length) - 1) {
+                            const attendeeExists = false
+                            await theAttendeesArray.attendee.push(sessionAttendeeDetails);
+                            await session.update({ _id: theTempDate }, { $set: { session: theAttendeesArray } }, async (err) => {
+                                if (err) return console.log(err);
+                                return;
+                            })
+                            await event.reply('record-attendee-temperature-reply', attendeeExists);
+                            await analyzerWindow.reload();
+                            return await sessionWindow.reload();
+                        }
+                    }
+                }
+
+
+
+            })
         }
-
-
-
     })
 })
 
@@ -527,51 +626,36 @@ ipcMain.on('open-session', async (event, arg) => {
         })
 });
 
-/*
-//search for the sessions of a particular date and the attendees who attended each session.
-//Send the results as an object in the form of a reply when this event emitter is on or activated
-ipcMain.on('sessionInfo', async (event, arg) => {
-    await temp.findOne({ _id: 1 }, async (err, doc) => {
-        if (err) return console.log(err);
-        else {
-            if (doc) {
-                const tempViewDate = doc.tempViewDate;
-                await session.findOne({ _id: tempViewDate }, async (err, theSessionInfo) => {
-                    if (err) return console.log(err);
-                    else if (theSessionInfo) {
-                        var manipulateArray1 = [];
-                        const mainArray = theSessionInfo.session.attendee
-                        manipulateArray1.push(theSessionInfo.session.start);
-                        manipulateArray1.push(theSessionInfo.session.end);
-                        await event.reply('sessionTime-reply', manipulateArray1);
-                        return await event.reply('sessionInfo-reply', mainArray);
-                    }
-                    else {
-                        var manipulateArray2 = [];
-                        return await event.reply('sessionInfo-reply', manipulateArray2);
-                    }
-                });
-            }
-            else {
-                return;
-            }
-        }
-    })
-})
-*/
 
 //search for the date that was entered in the frontend to view the session info
-//This date is stored in the database
+//Data like number of attendee for that date, number of males and number of females go with it
 ipcMain.on('search-tempDate', async (event, arg) => {
     await temp.findOne({ _id: 1 }, async (err, doc) => {
         if (err) return console.log(err);
         else if (doc) {
             const tempViewDate = doc.tempViewDate;
-            return await event.reply('search-tempDate-reply', tempViewDate);
+            await session.findOne({ _id: tempViewDate }, async (err, doc) => {
+                if (doc) {
+                    var tempHolder;
+                    //loop through the attendee array to check the number of males and females
+                    var maleNum = 0;
+                    var femaleNum = 0;
+                    tempHolder = doc.session.attendee;
+                    for (var j = 0; j < tempHolder.length; j++) {
+                        if (tempHolder[j].gender === "Male") maleNum += 1;
+                        else femaleNum += 1;
+                    }
+
+                    const viewSessionDetails = {theTempDate: tempViewDate, theTotal: tempHolder.length, theMales: maleNum, theFemales: femaleNum}
+                    return await event.reply('search-tempDate-reply', viewSessionDetails);
+                }
+
+            })
         }
     })
 })
 
+//event emitter used to search for the current session in use
 ipcMain.on('search-current-session', async (event, arg) => {
     await temp.findOne({ _id: 2 }, async (err, doc) => {
         var theTempDate;
@@ -583,19 +667,33 @@ ipcMain.on('search-current-session', async (event, arg) => {
     })
 })
 
+//event emitter used to search for the analysis data of all the sessions
 ipcMain.on('analysis-data', async (event, arg) => {
     await session.find({}, async (err, doc) => {
         if (doc) {
-            /*
-            var femaleNum;
-            var maleNum;
-            //const theAttendees = []
-            const genderArray = [maleNum, femaleNum];
-            */
+            var tempDoc = [];
+            var tempHolder;
+            for (var k = 0; k < doc.length; k++) {
+                //push each object of the analysis data into the array "tempDoc" using the format below
+                await tempDoc.push({ "_id": doc[k]._id, "maleNum": 0, "femaleNum": 0, "start": doc[k].session.start, "end": doc[k].session.end, "attendeeeNum": doc[k].session.attendee.length })
+            }
+            //loop through the data of all sessions to check the number of males and females
+            for (var i = 0; i < doc.length; i++) {
+                var maleNum = 0;
+                var femaleNum = 0;
+                tempHolder = doc[i].session.attendee;
+                for (var j = 0; j < tempHolder.length; j++) {
+                    if (tempHolder[j].gender === "Male") maleNum += 1;
+                    else femaleNum += 1;
+                }
+                tempDoc[i].maleNum = maleNum;
+                tempDoc[i].femaleNum = femaleNum;
+            }
+
             const sessionAvailable = true;
             await event.reply('analysis-data-available-reply', sessionAvailable);
             //await event.reply('analysis-data-gender-reply', genderArray);
-            return await event.reply('analysis-data-reply', doc);
+            return await event.reply('analysis-data-reply', tempDoc);
         }
         else {
             const sessionAvailable = false;
@@ -612,10 +710,28 @@ ipcMain.on('analysis-data-search', async (event, arg) => {
     await session.find({}, async (err, doc) => {
         if (err) return console.log(err);
         else {
+
+            var tempDoc = [];
+            var tempHolder;
+            for (var k = 0; k < doc.length; k++) {
+                await tempDoc.push({ "_id": doc[k]._id, "maleNum": 0, "femaleNum": 0, "start": doc[k].session.start, "end": doc[k].session.end, "attendeeeNum": doc[k].session.attendee.length })
+            }
+            for (var i = 0; i < doc.length; i++) {
+                var maleNum = 0;
+                var femaleNum = 0;
+                tempHolder = doc[i].session.attendee;
+                for (var j = 0; j < tempHolder.length; j++) {
+                    if (tempHolder[j].gender === "Male") maleNum += 1;
+                    else femaleNum += 1;
+                }
+                tempDoc[i].maleNum = maleNum;
+                tempDoc[i].femaleNum = femaleNum;
+            }
+
             var currentArray = []
-            for (var j = 0; j < doc.length; j++) {
-                if (doc[j]._id.toLowerCase().indexOf(searchName) >= 0) {
-                    currentArray.push(doc[j]);
+            for (var l = 0; l < tempDoc.length; l++) {
+                if (tempDoc[l]._id.toLowerCase().indexOf(searchName) >= 0) {
+                    await currentArray.push(tempDoc[l]);
                 }
             }
             return await event.reply('analysis-data-search-reply', currentArray);
@@ -638,7 +754,15 @@ ipcMain.on('open-analysis-window', async (event, arg) => {
     await analyzerWindow.show();
 })
 
-//event emitter used to update attendee details in the database 
+//event emitter used to insert new attendee details into the database
+ipcMain.on('add-attendee-details', async (event, arg) => {
+    
+    await attendee.insert({ firstName: arg.editFirstName, lastName: arg.editLastName, gender: arg.editGender, location: arg.editLocation, contactNumber: arg.editContactNumber, emailAddress: arg.editEmailAddress });
+    await editWindow.reload();
+    return await tabsWindow.reload();
+})
+
+//event emitter used to update attendee details into the database 
 ipcMain.on('edit-attendee-details', async (event, arg) => {
     await attendee.update({ _id: arg.editId }, { $set: { firstName: arg.editFirstName, lastName: arg.editLastName, gender: arg.editGender, location: arg.editLocation, contactNumber: arg.editContactNumber, emailAddress: arg.editEmailAddress } }, async (err) => {
         if (err) return console.log(err);
@@ -691,6 +815,21 @@ ipcMain.on('delete-service', async (event, arg) => {
     return await analyzerWindow.reload();
 })
 
+//event emitter used to open Clemotec website in the OS default browser
+ipcMain.on('open-clemotec', async (event, arg) => {
+    await shell.openExternal("https://clemotecghana.000webhostapp.com");
+})
+
+//event emitter used to open Clemotec apps and updates on the Clemotec webiste
+ipcMain.on('open-updates', async (event, arg) => {
+    await shell.openExternal("https://clemotecghana.000webhostapp.com#clemotec-apps")
+})
+
+//event emitter used to close the About window
+ipcMain.on('close-about-window', async (event, arg) => {
+    aboutWindow.close();
+})
+
 //Extra functions for clean code
 
 //function to take care of adding new attendee to the database
@@ -727,19 +866,23 @@ async function newAttendee(data) {
         if (err) return console.log(err)
         return;
     })
-    //Add the new attendee's information (temperature, first name, last name etc..) to the current session of the current date of church service.
-    await session.findOne({ _id: currDate }, async (err, doc) => {
+    return await temp.findOne({ _id: 2 }, async (err, doc) => {
         if (err) return console.log(err);
-        const sessionHolder = doc.session
-        await sessionHolder.attendee.push(sessionAttendeeDetails)
+        else if (doc) {
+            const theTempDate = doc.tempDate;
+            //Add the new attendee's information (temperature, first name, last name etc..) to the current church service or to the service set in settings
+            await session.findOne({ _id: theTempDate }, async (err, doc) => {
+                if (err) return console.log(err);
+                const sessionHolder = doc.session
+                await sessionHolder.attendee.push(sessionAttendeeDetails)
 
-        return await session.update({ _id: currDate }, { $set: { session: sessionHolder } }, async (err) => {
-            if (err) return console.log(err);
-            return;
-        })
+                return await session.update({ _id: theTempDate }, { $set: { session: sessionHolder } }, async (err) => {
+                    if (err) return console.log(err);
+                    return;
+                })
+            })
+        }
     })
-
-    return;
 }
 
 
@@ -756,11 +899,11 @@ async function putNewDate(startingTime, endingTime) {
     }
     await session.insert(doc, (err, newDoc) => {
         if (err) return console.log(err);
-        console.log("New Date added to the database");
     })
     return;
 }
 
+//function to take care of storing the temporary date to the database
 async function tempDate(viewSessionDate) {
     //set the temporary date holder to the date entered in the frontend
     //the id for the temporary date holder is 2
@@ -775,14 +918,15 @@ async function tempDate(viewSessionDate) {
     })
 }
 
+//function to take care of printing a session and it's attendees to PDF
 async function takeCareOfPDFPrinting() {
     const downloadsPath = electron.app.getPath('downloads');
     await temp.findOne({ _id: 2 }, async (err, doc) => {
         if (err) return console.log(err);
         else if (doc) {
             const tempDate = doc.tempDate;
-            if (fs.existsSync(downloadsPath + '/Cotrack')) {
-                const pdfPath = downloadsPath + "/Cotrack/" + tempDate + ".pdf";
+            if (fs.existsSync(downloadsPath + '/Cotrack-mini')) {
+                const pdfPath = downloadsPath + "/Cotrack-mini/" + tempDate + ".pdf";
                 //options for the pdf to be printed
                 var options = {
                     marginsType: 0,
@@ -802,10 +946,10 @@ async function takeCareOfPDFPrinting() {
                 })
             }
             else {
-                await fs.mkdir(downloadsPath + '/Cotrack', async (err) => {
+                await fs.mkdir(downloadsPath + '/Cotrack-mini', async (err) => {
                     if (err) return console.log(err);
                     else {
-                        const pdfPath = downloadsPath + "/Cotrack/" + tempDate + ".pdf";
+                        const pdfPath = downloadsPath + "/Cotrack-mini/" + tempDate + ".pdf";
                         //options for the pdf to be printed
                         var options = {
                             marginsType: 0,
@@ -830,8 +974,14 @@ async function takeCareOfPDFPrinting() {
     })
 }
 
+//function to take care of printing a session and it's attendees to printer
 async function takeCareOfPrinterPrinting() {
     console.log('Hello Clement. Print with a printer');
+}
+
+//function to show the about page
+async function showAboutPage() {
+    aboutWindow.show()
 }
 
 //Menu templates used in the application
@@ -872,6 +1022,8 @@ const generalTemplate = [
                 ])
         ]
     },
+    //The View menu item below is mainly needed during development
+    /*
     {
         label: 'View',
         submenu: [
@@ -886,6 +1038,7 @@ const generalTemplate = [
             { role: 'togglefullscreen' }
         ]
     },
+    */
     {
         label: 'Window',
         submenu: [
@@ -896,6 +1049,12 @@ const generalTemplate = [
             ] : [
                     { role: 'close' }
                 ])
+        ]
+    },
+    {
+        label: "Help",
+        submenu: [
+            { label: "About", click: () => showAboutPage() }
         ]
     }
 ]
@@ -908,6 +1067,8 @@ const printTemplate = [
             isMac ? { role: 'close' } : { role: 'quit' }
         ]
     },
+    //The Edit menu item below is not needed on the Session Info page
+    /*
     {
         label: 'Edit',
         submenu: [
@@ -936,6 +1097,9 @@ const printTemplate = [
                 ])
         ]
     },
+    */
+    //The View menu item below is mainly needed during development
+    /*
     {
         label: 'View',
         submenu: [
@@ -950,6 +1114,7 @@ const printTemplate = [
             { role: 'togglefullscreen' }
         ]
     },
+    */
     {
         label: 'Window',
         submenu: [
@@ -965,12 +1130,20 @@ const printTemplate = [
     {
         label: "Print",
         submenu: [
-            { label: "as PDF",  /*icon: 'src/Assets/images/printer1.png',*/  click: () => takeCareOfPDFPrinting() },
+            { label: "as PDF",/* icon: 'src/Assets/images/printer1.png',*/ click: () => takeCareOfPDFPrinting() },
             { label: "with Printer", click: () => takeCareOfPrinterPrinting() }
+        ]
+    },
+    {
+        label: "Help",
+        submenu: [
+            { label: "About", click: () => showAboutPage() }
         ]
     }
 ]
 
+//setting up templates from which menus will be built
 const general = Menu.buildFromTemplate(generalTemplate);
 const printer = Menu.buildFromTemplate(printTemplate);
+//creating the main menu from a template
 Menu.setApplicationMenu(general);

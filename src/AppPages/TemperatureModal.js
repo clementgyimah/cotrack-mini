@@ -1,21 +1,25 @@
+//Calling all necessary packages and libraries
 import React, { useState } from 'react';
 import '../Assets/css/Modal.css';
 import { BsToggleOff, BsToggleOn } from 'react-icons/bs';
 const { ipcRenderer } = window.require('electron');
 
 export default function TemperatureModal(props) {
+    //declaration of state variables
     const [attendeeTemperature, setAttendeeTemperature] = useState("");
     const [invalidRecord, setInvalidRecord] = useState(false);
     const [attendeeExists, setAttendeeExists] = useState(false);
     const [activateTemperature, setActivateTemperature] = useState(true);
     const showTempModal = props.show ? 'modal display-block' : 'modal display-none';
 
+    //expression to take care of temperature input
     const temperatureFunc = (e) => {
         setAttendeeTemperature(e.target.value);
         setInvalidRecord(false);
         setAttendeeExists(false);
     }
 
+    //expression to take care of prompting backend to record attendee temperature
     const handleRecordTemperature = () => {
         if (attendeeTemperature.length === 0) {
             if (activateTemperature) setInvalidRecord(true);
@@ -57,12 +61,14 @@ export default function TemperatureModal(props) {
         return;
     }
 
+    //expression to handle closing the temperature modal
     const handleCloseModal = () => {
         setAttendeeExists(false);
         setInvalidRecord(false);
         return props.handleClose();
     }
 
+    //expression to take care of activating temperature input
     const activateTemperatureFunc = () => {
         setActivateTemperature(!activateTemperature);
         setInvalidRecord(false);
@@ -73,8 +79,8 @@ export default function TemperatureModal(props) {
     return (
         <div className={showTempModal}>
             <div className="modal-main">
-                <div className="record-temperature-div">Record Temperature</div>
-                {
+                <div className="record-temperature-div">Record Attendee</div>
+                {/**error to return in case any input is not correct */
                     attendeeExists ?
                         (
                             <div className="record-temp-error">Oops! <span role="img" aria-label="Thinking">🤔</span><span> </span><strong>{props.cFirstName}</strong><span> </span>is already recorded</div>
@@ -85,6 +91,7 @@ export default function TemperatureModal(props) {
                             :
                             <div></div>)
                 }
+                {/**labels and inputs */}
                 <div className="attendee-info-div">
                     <div className="details-div"><label htmlFor="attendee-label-for-firstName" className="label-span">First Name: </label><span id="attendee-label-for-firstName" className="detail-span">{props.cFirstName}</span></div>
                     <div className="details-div"><label htmlFor="attendee-label-for-lastName" className="label-span">Last Name: </label><span id="attendee-label-for-lastName" className="detail-span">{props.cLastName}</span></div>

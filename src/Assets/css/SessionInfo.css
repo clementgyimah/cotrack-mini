@@ -14,8 +14,8 @@
     justify-content: center;
     color: black;
     background-color: white;
-    box-shadow: 5px 5px 30px rgba(0, 0, 0, 0.3);
-    font-size: 30px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.295);
+    font-size: 20px;
     font-weight: 600;
 }
 .session-info-body {
@@ -28,16 +28,26 @@
     flex-direction: row;
 }
 
-.specific-time-div {
+.specific-number-div {
+    width: 33%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.view-time-div {
     width: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 20px;
+    font-size: 15px;
     font-weight: 600;
 }
 
-.session-info-table-div {
+.main-table-container {
     margin-top: 10px;
     width: 100%;
     display: flex;
@@ -45,16 +55,25 @@
     align-items: center;
 }
 
-.session-info-table {
-    border-top: solid 3px #387C44;
+.session-info-table-div {
     width: 95%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: solid 2px black;
+
+}
+
+.session-info-table {
+    /*border-top: solid 3px #387C44;*/
+    width: 100%;
 }
 
 .session-info-table-thread-tr-th {
-    font-size: 18px;
-    color: white;
-    border: solid 3px #387C44;
-    background-color: #387C44;
+    font-size: 13px;
+    color: black;
+    border: solid 2px black;
+    /*background-color: black;*/
 }
 
 .session-table-cells-div {
@@ -64,9 +83,9 @@
 }
 
 .session-info-table-tbody-tr-td {
-    font-size: 15px;
-    border-right: solid 0px #387C44;
-    border-left: solid 0px #387C44;
+    font-size: 11px;
+    border-right: solid 0px black;
+    border-left: solid 0px black;
 }
 
 .no-sessions-found-div {

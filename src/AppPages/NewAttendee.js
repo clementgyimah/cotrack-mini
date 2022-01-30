@@ -1,9 +1,11 @@
+//Calling all necessary packages and libraries
 import React, { useState } from 'react';
 import '../Assets/css/NewAttendee.css';
 import { BsToggleOff, BsToggleOn } from 'react-icons/bs';
 const { ipcRenderer } = window.require('electron');
 
 export default function NewAttendee(props) {
+  //declaration of state variables
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [gender, setGender] = useState("");
@@ -17,6 +19,7 @@ export default function NewAttendee(props) {
   const [activateEmail, setActivateEmail] = useState(true);
   const [activateContact, setActivateContact] = useState(true);
   const [activateLocation, setActivateLocation] = useState(true);
+  const [invalidEmail, setInvalidEmail] = useState(false)
 
   const onSubmit = () => {
     //variables to hold attendee details
@@ -27,6 +30,7 @@ export default function NewAttendee(props) {
     setTemperature(temperature.split(" ").join(""));
     setGender(gender.split(" ").join(""));
     console.log(gender);
+    //logic that uses "Exclusive OR" to make sure that each toggle button correlate with it's input before form submission
     if (firstName.length === 0 || lastName.length === 0 || gender.length === 0) return setInvalidAdd(true);
     else if (location.length === 0 || contactNumber.length === 0 || emailAddress.length === 0 || temperature.length === 0) {
       if ((location.length === 0 && !activateLocation) || (!(location.length === 0) && activateLocation)) {
@@ -46,7 +50,8 @@ export default function NewAttendee(props) {
                 ipcRenderer.send("new-attendee", attendeeDetails);
                 ipcRenderer.on('new-attendee-reply', (event, arg) => {
                   setAttendeeAlreadyExist(arg);
-                })
+                });
+                //reset each variable as empty string. This will clear all input values
                 setFirstName("");
                 setLastName("");
                 setLocation("");
@@ -54,28 +59,32 @@ export default function NewAttendee(props) {
                 setEmailAddress("");
                 setTemperature("");
               }
+              //condition to check if a valid email is entered in the email input. Done by checking '@' sign in the input
               else {
                 if (emailAddress.indexOf('@') < 0) setInvalidAdd(true);
                 else {
-                  const attendeeDetails = {
-                    firstName,
-                    lastName,
-                    gender,
-                    location,
-                    contactNumber,
-                    emailAddress,
-                    temperature
+                  if (emailAddress.length > 25) setInvalidEmail(true);
+                  else {
+                    const attendeeDetails = {
+                      firstName,
+                      lastName,
+                      gender,
+                      location,
+                      contactNumber,
+                      emailAddress,
+                      temperature
+                    }
+                    ipcRenderer.send("new-attendee", attendeeDetails);
+                    ipcRenderer.on('new-attendee-reply', (event, arg) => {
+                      setAttendeeAlreadyExist(arg);
+                    })
+                    setFirstName("");
+                    setLastName("");
+                    setLocation("");
+                    setContactNumber("");
+                    setEmailAddress("");
+                    setTemperature("");
                   }
-                  ipcRenderer.send("new-attendee", attendeeDetails);
-                  ipcRenderer.on('new-attendee-reply', (event, arg) => {
-                    setAttendeeAlreadyExist(arg);
-                  })
-                  setFirstName("");
-                  setLastName("");
-                  setLocation("");
-                  setContactNumber("");
-                  setEmailAddress("");
-                  setTemperature("");
                 }
 
               }
@@ -92,87 +101,113 @@ export default function NewAttendee(props) {
       setInvalidAdd(true);
     }
     else {
-      const attendeeDetails = {
-        firstName,
-        lastName,
-        gender,
-        location,
-        contactNumber,
-        emailAddress,
-        temperature
+      if (emailAddress.length > 25) setInvalidEmail(true);
+      else {
+        const attendeeDetails = {
+          firstName,
+          lastName,
+          gender,
+          location,
+          contactNumber,
+          emailAddress,
+          temperature
+        }
+        ipcRenderer.send("new-attendee", attendeeDetails);
+        ipcRenderer.on('new-attendee-reply', (event, arg) => {
+          setAttendeeAlreadyExist(arg);
+        })
+        setFirstName("");
+        setLastName("");
+        setLocation("");
+        setContactNumber("");
+        setEmailAddress("");
+        setTemperature("");
       }
-      ipcRenderer.send("new-attendee", attendeeDetails);
-      ipcRenderer.on('new-attendee-reply', (event, arg) => {
-        setAttendeeAlreadyExist(arg);
-      })
-      setFirstName("");
-      setLastName("");
-      setLocation("");
-      setContactNumber("");
-      setEmailAddress("");
-      setTemperature("");
     }
   }
+
+  //expressions to set inputs to their respective state variables
   const firstNameFunc = (e) => {
     setFirstName(e.target.value);
     setAttendeeAlreadyExist(false);
     setInvalidAdd(false);
+    setInvalidEmail(false);
   }
+
   const lastNameFunc = (e) => {
     setLastName(e.target.value);
     setAttendeeAlreadyExist(false);
     setInvalidAdd(false);
+    setInvalidEmail(false);
   }
+
   const genderFunc = (e) => {
     setGender(e.target.value);
     setAttendeeAlreadyExist(false);
     setInvalidAdd(false);
+    setInvalidEmail(false);
   }
+
   const locationFunc = (e) => {
     setLocation(e.target.value);
     setAttendeeAlreadyExist(false);
     setInvalidAdd(false);
+    setInvalidEmail(false);
   }
+
   const contactNumberFunc = (e) => {
     setContactNumber(e.target.value);
     setAttendeeAlreadyExist(false);
     setInvalidAdd(false);
+    setInvalidEmail(false);
   }
+
   const emailAddressFunc = (e) => {
     setEmailAddress(e.target.value);
     setAttendeeAlreadyExist(false);
     setInvalidAdd(false);
+    setInvalidEmail(false);
   }
+
   const temperatureFunc = (e) => {
     setTemperature(e.target.value);
     setAttendeeAlreadyExist(false);
     setInvalidAdd(false);
+    setInvalidEmail(false);
   }
 
   const activateTempFunc = () => {
     setActivateTemp(!activateTemp);
     setTemperature("");
     setInvalidAdd(false);
+    setInvalidEmail(false);
   }
+
   const activateEmailFunc = () => {
     setActivateEmail(!activateEmail);
     setEmailAddress("");
     setInvalidAdd(false);
+    setInvalidEmail(false);
   }
+
   const activateContactFunc = () => {
     setActivateContact(!activateContact);
     setContactNumber("");
     setInvalidAdd(false);
+    setInvalidEmail(false);
   }
+
   const activateLocationFunc = () => {
     setActivateLocation(!activateLocation);
     setLocation("");
     setInvalidAdd(false);
+    setInvalidEmail(false);
   }
 
   return (
     <div className="new-attendee-container">
       <div className="new-attendee-holder">
+        {/**form labels, inputs and toggle buttons */}
         <div className="section-div">
           <label htmlFor="first-name-label" className="attendee-details-text">First Name: </label>
           <input type="text" id="first-name-label" className="attendee-details-input-text" placeholder="Clement" value={firstName} onChange={firstNameFunc} />
@@ -233,14 +268,19 @@ export default function NewAttendee(props) {
         <div className="temperature-button-div">
           <div onClick={() => onSubmit()} className="temperature-button">Save</div>
         </div>
-        {
+        {/**send error if attendee already exist in the database or any of the input(s) is/are not correct */
           attendeeAlreadyExist ?
             (<div className="new-attendee-error">Oops! <span role="img" aria-label="Thinking">🤔</span> Attendee already exists</div>)
             :
             (invalidAdd ?
-              <div className="new-attendee-error">Oops! <span role="img" aria-label="EyesUp">🙄</span> Fill all inputs appropriately</div>
+              (<div className="new-attendee-error">Oops! <span role="img" aria-label="EyesUp">🙄</span> Fill all inputs appropriately</div>)
               :
-              <div></div>)
+              (invalidEmail ?
+                (<div className="new-attendee-error">Oops! <span role="img" aria-label="EyesUp">🙄</span> Email address should have a maximum of 25 characters</div>)
+                :
+                (<div></div>)
+              )
+            )
         }
       </div>
     </div>

@@ -1,30 +1,40 @@
+//Calling all necessary packages and libraries
 import React, { useState, useEffect } from 'react';
 import "../Assets/css/SessionInfo.css";
 const { ipcRenderer } = window.require('electron');
 
+//renderer process to listen to backend after PDF download is done
 ipcRenderer.on('pdf-printed', async (event, arg) => {
   return alert("😁 PDF Downloaded!!!\n\nCheck the path below on your computer file system:\n" + arg);
 })
 
 export default function SessionInfo() {
+  //declaration of state variables
   const [sessionHolder, setSessionHolder] = useState([]);
   const [dateHolder, setDateHolder] = useState("");
   const [timeHolder, setTimeHolder] = useState({});
+  const [totalHolder, setTotalHolder] = useState("");
+  const [maleHolder, setMaleHolder] = useState("");
+  const [femaleHolder, setFemaleHolder] = useState("");
 
   useEffect(() => {
+    //react hook that starts first when component mounts
     var isSubscribed = true
     if (isSubscribed) {
-      ipcRenderer.send('old-attendee-current-session-all');
-      ipcRenderer.on('sessionTime-reply', async (event, arg) => {
+      ipcRenderer.send('view-old-attendee-current-session-all');
+      ipcRenderer.on('view-sessionTime-reply', async (event, arg) => {
         await setTimeHolder(arg);
       })
-      ipcRenderer.on('old-attendee-current-session-all-reply', async (event, arg) => {
+      ipcRenderer.on('view-old-attendee-current-session-all-reply', async (event, arg) => {
         await setSessionHolder(arg);
       })
       ipcRenderer.send('search-tempDate');
       ipcRenderer.on('search-tempDate-reply', async (event, arg) => {
         if (arg) {
-          await setDateHolder(arg);
+          await setDateHolder(arg.theTempDate);
+          await setTotalHolder(arg.theTotal);
+          await setMaleHolder(arg.theMales);
+          setFemaleHolder(arg.theFemales)
         }
       })
     }
@@ -43,10 +53,16 @@ export default function SessionInfo() {
             (
               <div>
                 <div className="time-div">
-                  <div className="specific-time-div">Start Time: {timeHolder.start}</div>
-                  <div className="specific-time-div">End Time: {timeHolder.end}</div>
+                  <div className="specific-number-div">Total: {totalHolder}</div>
+                  <div className="specific-number-div">Males: {maleHolder}</div>
+                  <div className="specific-number-div">Females: {femaleHolder}</div>
                 </div>
-
+                <div className="time-div">
+                  <div className="view-time-div">Start Time: {timeHolder.start}</div>
+                  <div className="view-time-div">End Time: {timeHolder.end}</div>
+                </div>
+                {/**table div */}
+                <div className="main-table-container">
                 <div className="session-info-table-div">
                   <table className="session-info-table" rules="all">
                     <thead className="session-info-table-thread">
@@ -81,10 +97,12 @@ export default function SessionInfo() {
                     </tbody>
                   </table>
                 </div>
+                </div>
               </div>
             )
             :
             <div className="no-sessions-found-div">
+              {/**error to return when no session is recorded for the date whose information is being searched */}
               <div className="no-sessions-found-text"> <span role="img" aria-label="EyesDown">😔</span> Sorry, there wasn't any recorded sessions on this date</div>
             </div>
         }
