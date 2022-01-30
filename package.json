@@ -26,7 +26,8 @@
     "build-windows": "yarn react-build && electron-builder --win",
     "build-linux": "yarn react-build && electron-builder --linux",
     "build-mac": "yarn react-build && electron-builder --mac",
-    "release": "yarn react-build && electron-builder --publish=always"
+    "release": "yarn react-build && electron-builder --publish=always",
+    "cz": "cz"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -45,6 +46,7 @@
   },
   "devDependencies": {
     "concurrently": "^5.2.0",
+    "cypress": "^7.5.0",
     "electron": "^10.1.3",
     "electron-builder": "^22.7.0",
     "electron-reload": "^1.5.0",
