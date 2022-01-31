@@ -208,10 +208,9 @@ function HomePage() {
                             {/**the "sideBarType" variable will help identify which CSS attribute should be used 
                  * for the homepage content considering the type of sidebar being activated  */}
                             <div className={sideBarType}>
-                                <div className="home-content-background-decoration">
-                                </div>
+                                <div className="home-content-background-decoration" />
                                 <div className={startServiceDiv}>
-                                    <div className="start-service-text">Start Service</div>
+                                    <div className="start-service-text">Start Session</div>
                                     <div>
                                         <div className="start-service-elements-div">
                                             <label htmlFor="service-start-label" className="service-details-text">Starting Time: </label>
@@ -237,7 +236,7 @@ function HomePage() {
                                     }
                                 </div>
                                 <div className={viewServiceDiv}>
-                                    <div className="view-service-text">View Service</div>
+                                    <div className="view-service-text">View Session</div>
                                     <div className="view-service-elements-div">
                                         <label htmlFor="service-date-label" className="view-service-details-text">Date: </label>
                                         <input id="service-date-label" className="view-service-details-input" onChange={handleInputService} value={takeCareOfService} placeholder="2020-09-15" type="date" />

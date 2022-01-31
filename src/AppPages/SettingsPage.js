@@ -64,7 +64,7 @@ export default function SettingsPage() {
       <div className="settings-content">
         {/**form labels, inputs and toggle buttons */}
         <div className="settings-content-row-div">
-          <label htmlFor="church-name-label" className="settings-details-text">Church Name: </label>
+          <label htmlFor="church-name-label" className="settings-details-text">Organization Name: </label>
           <input type="text" id="church-name-label" className="details-input-text" placeholder="Enter Church Name" value={churchName} onChange={churchNameFunc} />
         </div>
         <div className="settings-content-row-div">
