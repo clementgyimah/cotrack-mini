@@ -1,74 +1,90 @@
-//Calling all necessary packages and libraries
-import React, { useState, useEffect } from 'react';
-import '../Assets/css/AttendeeTabs.css';
-import NewAttendee from './NewAttendee';
-import OldAttendee from './OldAttendee';
-const { ipcRenderer } = window.require('electron');
+// Calling all necessary packages and libraries
+import React, { useState, useEffect } from "react";
+import "../Assets/css/AttendeeTabs.css";
+import NewAttendee from "./NewAttendee";
+import OldAttendee from "./OldAttendee";
+const { ipcRenderer } = window.require("electron");
 
 function AttendeeTabs() {
-  //declaration of state variables
-  const [oldAttendeeTab, setOldAttendeeTab] = useState("old-attendee-tab-active-div");
+  // declaration of state variables
+  const [oldAttendeeTab, setOldAttendeeTab] = useState(
+    "old-attendee-tab-active-div"
+  );
   const [newAttendeeTab, setNewAttendeeTab] = useState("new-attendee-tab-div");
   const [sessionAvailable, setSessionAvailable] = useState(false);
 
-  //react hook that starts first when component mounts
+  // react hook that starts first when component mounts
   useEffect(() => {
-    var isSubscribed = true;
+    let isSubscribed = true;
     if (isSubscribed) {
-      ipcRenderer.send('verify-session-availability');
-      ipcRenderer.on('verify-session-availability-reply', (event, arg) => {
+      ipcRenderer.send("verify-session-availability");
+      ipcRenderer.on("verify-session-availability-reply", (event, arg) => {
         setSessionAvailable(arg);
-      })
+      });
     }
-    return () => isSubscribed = false;
-  }, [])
+    return () => (isSubscribed = false);
+  }, []);
 
-  //expression to make old attendee tab active
+  // expression to make old attendee tab active
   const oldAttendeeTabFunc = () => {
     setOldAttendeeTab("old-attendee-tab-active-div");
-    setNewAttendeeTab("new-attendee-tab-div")
-  }
+    setNewAttendeeTab("new-attendee-tab-div");
+  };
 
-  //expression to make new attendee tab active
+  // expression to make new attendee tab active
   const newAttendeeTabFunc = () => {
     setOldAttendeeTab("old-attendee-tab-div");
     setNewAttendeeTab("new-attendee-tab-active-div");
-  }
+  };
 
   return (
     <div className="tabs-container">
-      {/**check if a session is available for the active date in the database */
-        sessionAvailable ?
-          (
-            <div>
-              <header className="tabs-div">
-                <div onClick={() => oldAttendeeTabFunc()} className={oldAttendeeTab}>
-                  Old Attendee
-        </div>
-                <div onClick={() => newAttendeeTabFunc()} className={newAttendeeTab}>
-                  New Attendee
-        </div>
-              </header>
-              <div className="body-div">
-                {
-                  oldAttendeeTab === "old-attendee-tab-active-div" ?
-                    <OldAttendee />
-                    :
-                    <NewAttendee />
-                }
+      {
+        /**
+         * check if a session is available for the active date in the database
+         */
+        sessionAvailable ? (
+          <div>
+            <header className="tabs-div">
+              <div
+                onClick={() => oldAttendeeTabFunc()}
+                className={oldAttendeeTab}
+              >
+                Old Attendee
               </div>
+              <div
+                onClick={() => newAttendeeTabFunc()}
+                className={newAttendeeTab}
+              >
+                New Attendee
+              </div>
+            </header>
+            <div className="body-div">
+              {oldAttendeeTab === "old-attendee-tab-active-div" ? (
+                <OldAttendee />
+              ) : (
+                <NewAttendee />
+              )}
             </div>
-          )
-          :
-          (
-            <div className="session-unavailable-div">
-              {/**error to return if no session is available for the active date in the database */}
-              <div className="session-unavailable-text"> <span role="img" aria-label="EyesDown">😔</span> Sorry, no session started for today</div>
+          </div>
+        ) : (
+          <div className="session-unavailable-div">
+            {/**
+             * error to return if no session is available
+             * for the active date in the database
+             */}
+            <div className="session-unavailable-text">
+              {" "}
+              <span role="img" aria-label="EyesDown">
+                😔
+              </span>{" "}
+              Sorry, no session started for today
             </div>
-          )
+          </div>
+        )
       }
     </div>
-  )
+  );
 }
 
-export default AttendeeTabs
+export default AttendeeTabs;
