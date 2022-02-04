@@ -61,6 +61,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-promise": "^4.2.1",
     "prettier": "^2.5.1",
+    "prop-types": "^15.8.1",
     "wait-on": "^5.1.0"
   },
   "build": {

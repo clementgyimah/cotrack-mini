@@ -1,6 +1,7 @@
 // Calling all necessary packages and libraries
 import React, { useState, useEffect } from "react";
 import "../Assets/css/Modal.css";
+import PropTypes from "prop-types";
 const { ipcRenderer } = window.require("electron");
 
 export default function EditAttendeeModal(props) {
@@ -240,3 +241,16 @@ export default function EditAttendeeModal(props) {
     </div>
   );
 }
+
+EditAttendeeModal.propTypes = {
+  cId: PropTypes.string.isRequired,
+  cFirstName: PropTypes.string.isRequired,
+  cLastName: PropTypes.string.isRequired,
+  cGender: PropTypes.string.isRequired,
+  cLocation: PropTypes.string.isRequired,
+  cContactNumber: PropTypes.string.isRequired,
+  cEmailAddress: PropTypes.string.isRequired,
+  show: PropTypes.bool.isRequired,
+  newAttendeeAdd: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
+};

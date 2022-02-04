@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import "../Assets/css/Modal.css";
 import { BsToggleOff, BsToggleOn } from "react-icons/bs";
+import PropTypes from "prop-types";
 const { ipcRenderer } = window.require("electron");
 
 export default function TemperatureModal(props) {
@@ -230,3 +231,14 @@ export default function TemperatureModal(props) {
     </div>
   );
 }
+
+TemperatureModal.propTypes = {
+  cFirstName: PropTypes.string.isRequired,
+  cLastName: PropTypes.string.isRequired,
+  cGender: PropTypes.string.isRequired,
+  cLocation: PropTypes.string.isRequired,
+  cContactNumber: PropTypes.string.isRequired,
+  cEmailAddress: PropTypes.string.isRequired,
+  show: PropTypes.bool.isRequired,
+  handleClose: PropTypes.func.isRequired,
+};
