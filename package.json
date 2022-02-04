@@ -32,7 +32,8 @@
     "build-mac": "yarn react-build && electron-builder --mac",
     "release": "yarn react-build && electron-builder --publish=always",
     "lint": "eslint .",
-    "lint:fix": "eslint --fix"
+    "lint:fix": "eslint --fix",
+    "cz": "git-cz"
   },
   "eslintConfig": {
     "extends": "react-app"
