@@ -33,6 +33,7 @@
     font-size: 20px;
     font-weight: 600;
     margin-right: 10px;
+    color: rgba(0, 0, 0, 0.7);
 }
 
 .attendee-details-input-text {
@@ -42,6 +43,7 @@
     border-radius: 8px;
     cursor: pointer;
     font-size: 15px;
+    color: rgba(0, 0, 0, 0.7);
 }
 
 .attendee-details-input-number {
@@ -51,6 +53,7 @@
     border-radius: 8px;
     cursor: pointer;
     font-size: 15px;
+    color: rgba(0, 0, 0, 0.7);
 }
 
 .temperature-button-div {

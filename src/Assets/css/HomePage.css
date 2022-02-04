@@ -159,7 +159,9 @@ body {
     align-items: center;
     font-size: 25px;
     font-weight: bold;
+    margin-top: 10px;
     margin-bottom: 50px;
+    color: rgba(0, 0, 0, 0.7);
 }
 
 .start-service-elements-div {
@@ -171,6 +173,7 @@ body {
     font-size: 18px;
     width: 50%;
     font-weight: 600;
+    color: rgba(0, 0, 0, 0.7);
 }
 
 .service-details-input {
@@ -180,6 +183,7 @@ body {
     border-radius: 8px;
     cursor: pointer;
     font-size: 15px;
+    color: rgba(0, 0, 0, 0.7);
 }
 
 .start-service-button-div {
@@ -240,7 +244,9 @@ body {
     align-items: center;
     font-size: 25px;
     font-weight: bold;
+    margin-top: 10px;
     margin-bottom: 50px;
+    color: rgba(0, 0, 0, 0.7);
 }
 
 .view-service-elements-div {
@@ -252,6 +258,7 @@ body {
     font-size: 18px;
     width: 50%;
     font-weight: 600;
+    color: rgba(0, 0, 0, 0.7);
 }
 
 .view-service-details-input {
