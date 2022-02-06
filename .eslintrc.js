@@ -4,7 +4,7 @@ module.exports = {
     es2021: true,
     node: true,
   },
-  extends: ["plugin:react/recommended", "standard", "prettier"],
+  extends: ["prettier-standard"],
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
