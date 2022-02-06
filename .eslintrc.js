@@ -4,7 +4,7 @@ module.exports = {
     es2021: true,
     node: true,
   },
-  extends: ["plugin:react/recommended", "standard", "prettier"],
+  extends: ["prettier-standard"],
   parserOptions: {
     ecmaFeatures: {
       jsx: true,
@@ -12,7 +12,7 @@ module.exports = {
     ecmaVersion: 12,
     sourceType: "module",
   },
-  plugins: ["react", "prettier"],
+  // plugins: ["react", "prettier"],
   rules: {
     "max-len": [
       "error",
