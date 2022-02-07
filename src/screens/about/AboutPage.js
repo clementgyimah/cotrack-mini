@@ -1,7 +1,7 @@
 // Calling all necessary packages and libraries
 import React from "react";
-import "../Assets/css/AboutPage.css";
-import logo from "../Assets/images/logo/cotrack-logo.png";
+import "../../Assets/css/AboutPage.css";
+import logo from "../../Assets/images/logo/cotrack-logo.png";
 const { ipcRenderer } = window.require("electron");
 
 export default function AboutPage() {

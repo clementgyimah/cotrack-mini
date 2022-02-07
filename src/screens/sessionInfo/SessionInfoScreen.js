@@ -1,6 +1,6 @@
 // Calling all necessary packages and libraries
 import React, { useState, useEffect } from "react";
-import "../Assets/css/SessionInfo.css";
+import "../../Assets/css/SessionInfo.css";
 const { ipcRenderer } = window.require("electron");
 
 // renderer process to listen to backend after PDF download is done

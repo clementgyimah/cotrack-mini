@@ -1,6 +1,6 @@
 // Calling all necessary packages and libraries
 import React, { useState, useEffect } from "react";
-import "../Assets/css/HomePage.css";
+import "../../Assets/css/HomePage.css";
 import {
   FaTools,
   FaBars,

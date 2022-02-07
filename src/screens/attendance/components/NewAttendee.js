@@ -1,6 +1,6 @@
 // Calling all necessary packages and libraries
 import React, { useState } from "react";
-import "../Assets/css/NewAttendee.css";
+import "../../../Assets/css/NewAttendee.css";
 import { BsToggleOff, BsToggleOn } from "react-icons/bs";
 const { ipcRenderer } = window.require("electron");
 

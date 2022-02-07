@@ -1,7 +1,7 @@
 // Calling all necessary packages and libraries
 import React, { useEffect, useState } from "react";
-import TemperatureModal from "./TemperatureModal";
-import "../Assets/css/OldAttendee.css";
+import TemperatureModal from "./RecordAttendaceModal";
+import "../../../Assets/css/OldAttendee.css";
 import { FaThermometerHalf } from "react-icons/fa";
 import { BsToggleOff, BsToggleOn } from "react-icons/bs";
 const { ipcRenderer } = window.require("electron");
