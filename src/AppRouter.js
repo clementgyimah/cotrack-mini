@@ -2,11 +2,11 @@ import React from "react";
 import { Route, Switch, HashRouter } from "react-router-dom";
 import HomePage from "./screens/home/HomeScreen";
 import SessionInfo from "./screens/sessionInfo/SessionInfoScreen";
-import EditPage from "./screens/editAttendee/EditPage";
-import Analyzer from "./screens/session/sessionScreen";
+import EditPage from "./screens/editAttendee/EditAttendeeScreen";
+import Analyzer from "./screens/session/SessionScreen";
 import AttendeeTabs from "./screens/attendance/AttendeeTabs";
 import SettingsPage from "./screens/settings/SettingsScreen";
-import AboutPage from "./screens/about/AboutPage";
+import AboutPage from "./screens/about/AboutScreen";
 
 const AppRouter = () => (
   <HashRouter>
