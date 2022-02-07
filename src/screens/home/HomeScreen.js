@@ -256,7 +256,7 @@ function HomePage() {
                         : "sidebar-element-div-text"
                     }
                   >
-                    Analyze
+                    Sessions
                   </span>
                 </div>
                 <div
