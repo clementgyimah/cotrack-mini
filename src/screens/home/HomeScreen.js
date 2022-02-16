@@ -1,14 +1,9 @@
 // Calling all necessary packages and libraries
 import React, { useState, useEffect } from "react";
 import "../../Assets/css/HomePage.css";
-import {
-  FaTools,
-  FaBars,
-  FaWindowMaximize,
-  FaEdit,
-  FaMedapps,
-} from "react-icons/fa";
+import { FaBars } from "react-icons/fa";
 import { BsToggleOff, BsToggleOn } from "react-icons/bs";
+import { BigSideBar, SmallSideBar } from "./components/SideBar";
 const { ipcRenderer } = window.require("electron");
 
 function HomePage() {
@@ -32,7 +27,7 @@ function HomePage() {
   const [invalidStart, setInvalidStart] = useState(false);
   const [invalidView, setInvalidView] = useState(false);
   const [serviceAlreadyStarted, setServiceAlreadyStarted] = useState(false);
-  const [churchName, setChurchName] = useState("");
+  const [orgName, setOrgName] = useState("");
   const [verificationKey, setVerificationKey] = useState("");
   const [keyError, setKeyError] = useState(false);
   const [activatePassword, setActivatePassword] = useState(true);
@@ -47,7 +42,7 @@ function HomePage() {
       });
       ipcRenderer.send("get-church-name");
       ipcRenderer.on("get-church-name-reply", async (event, arg) => {
-        await setChurchName(arg);
+        await setOrgName(arg);
       });
     }
     return () => (isSubscribed = false);
@@ -85,26 +80,6 @@ function HomePage() {
     if (invalidView) setInvalidView(false);
   };
 
-  // expression to prompt backend to open the current session window
-  const sidebarMenuCurrentService = () => {
-    ipcRenderer.send("open-current-session");
-  };
-
-  // expression to prompt backend to open the edit attendee window
-  const sidebarMenuEdit = () => {
-    ipcRenderer.send("open-edit-window");
-  };
-
-  // expression to prompt backend to open the session analyzer window
-  const sidebarMenuSessionAnalyzer = () => {
-    ipcRenderer.send("open-analysis-window");
-  };
-
-  // expression to prompt backend to open the settings window
-  const sidebarMenuSettings = () => {
-    ipcRenderer.send("open-settings-window");
-  };
-
   // expression to handle toggling of the sidebar when the icon is selected
   const toggleSidebar = () => {
     setBigSidebar(!bigSidebar);
@@ -131,27 +106,6 @@ function HomePage() {
     setServiceEndingTime(e.target.value);
     if (invalidStart) setInvalidStart(false);
     if (serviceAlreadyStarted) setServiceAlreadyStarted(false);
-  };
-
-  // expressions to handle hovering over any of the sidebar menu items
-  const currentServiceHoverFunc = (cond) => {
-    if (cond === "on") setCurrentServiceHover(true);
-    else if (cond === "off") setCurrentServiceHover(false);
-  };
-
-  const editHoverFunc = (cond) => {
-    if (cond === "on") setEditHover(true);
-    else if (cond === "off") setEditHover(false);
-  };
-
-  const sessionAnalyzerHoverFunc = (cond) => {
-    if (cond === "on") setAnalyzerHover(true);
-    else if (cond === "off") setAnalyzerHover(false);
-  };
-
-  const settingsHoverFunc = (cond) => {
-    if (cond === "on") setSettingsHover(true);
-    else if (cond === "off") setSettingsHover(false);
   };
 
   // expression to control verify key input
@@ -186,7 +140,7 @@ function HomePage() {
               <FaBars color="white" size={30}></FaBars>
             </div>
             <div className="church-title-div">
-              <div className="church-title">{churchName}</div>
+              <div className="church-title">{orgName}</div>
             </div>
           </header>
           {
@@ -195,143 +149,31 @@ function HomePage() {
              * or the small sidebar should be activated
              */
             bigSidebar ? (
-              <div className="sidebar">
-                <div
-                  onMouseEnter={() => currentServiceHoverFunc("on")}
-                  onMouseLeave={() => currentServiceHoverFunc("off")}
-                  onClick={() => sidebarMenuCurrentService()}
-                  className="sidebar-element-div"
-                >
-                  <FaWindowMaximize
-                    id="sidebar-icons"
-                    color={currentServiceHover ? "#6698FF" : "#387C44"}
-                    size={currentServiceHover ? 25 : 20}
-                  ></FaWindowMaximize>
-                  <span
-                    className={
-                      currentServiceHover
-                        ? "sidebar-element-div-text-active"
-                        : "sidebar-element-div-text"
-                    }
-                  >
-                    Current Service
-                  </span>
-                </div>
-                <div
-                  onMouseEnter={() => editHoverFunc("on")}
-                  onMouseLeave={() => editHoverFunc("off")}
-                  onClick={() => sidebarMenuEdit()}
-                  className="sidebar-element-div"
-                >
-                  <FaEdit
-                    id="sidebar-icons"
-                    color={editHover ? "#6698FF" : "#387C44"}
-                    size={editHover ? 25 : 20}
-                  ></FaEdit>
-                  <span
-                    className={
-                      editHover
-                        ? "sidebar-element-div-text-active"
-                        : "sidebar-element-div-text"
-                    }
-                  >
-                    Edit
-                  </span>
-                </div>
-                <div
-                  onMouseEnter={() => sessionAnalyzerHoverFunc("on")}
-                  onMouseLeave={() => sessionAnalyzerHoverFunc("off")}
-                  onClick={() => sidebarMenuSessionAnalyzer()}
-                  className="sidebar-element-div"
-                >
-                  <FaMedapps
-                    id="sidebar-icons"
-                    color={analyzerHover ? "#6698FF" : "#387C44"}
-                    size={analyzerHover ? 25 : 20}
-                  ></FaMedapps>
-                  <span
-                    className={
-                      analyzerHover
-                        ? "sidebar-element-div-text-active"
-                        : "sidebar-element-div-text"
-                    }
-                  >
-                    Sessions
-                  </span>
-                </div>
-                <div
-                  onMouseEnter={() => settingsHoverFunc("on")}
-                  onMouseLeave={() => settingsHoverFunc("off")}
-                  onClick={() => sidebarMenuSettings()}
-                  className="sidebar-element-div"
-                >
-                  <FaTools
-                    id="sidebar-icons"
-                    color={settingsHover ? "#6698FF" : "#387C44"}
-                    size={settingsHover ? 25 : 20}
-                  ></FaTools>
-                  <span
-                    className={
-                      settingsHover
-                        ? "sidebar-element-div-text-active"
-                        : "sidebar-element-div-text"
-                    }
-                  >
-                    Settings
-                  </span>
-                </div>
-              </div>
+              <BigSideBar
+                currentServiceHover={currentServiceHover}
+                editHover={editHover}
+                analyzerHover={analyzerHover}
+                settingsHover={settingsHover}
+                setCurrentServiceHover={(props) =>
+                  setCurrentServiceHover(props)
+                }
+                setEditHover={(props) => setEditHover(props)}
+                setAnalyzerHover={(props) => setAnalyzerHover(props)}
+                setSettingsHover={(props) => setSettingsHover(props)}
+              />
             ) : (
-              <div className="short-sidebar">
-                <div
-                  onMouseEnter={() => currentServiceHoverFunc("on")}
-                  onMouseLeave={() => currentServiceHoverFunc("off")}
-                  onClick={() => sidebarMenuCurrentService()}
-                  className="short-sidebar-element-div"
-                >
-                  <FaWindowMaximize
-                    id="sidebar-icons"
-                    color={currentServiceHover ? "#6698FF" : "#387C44"}
-                    size={currentServiceHover ? 25 : 20}
-                  ></FaWindowMaximize>
-                </div>
-                <div
-                  onMouseEnter={() => editHoverFunc("on")}
-                  onMouseLeave={() => editHoverFunc("off")}
-                  onClick={() => sidebarMenuEdit()}
-                  className="short-sidebar-element-div"
-                >
-                  <FaEdit
-                    id="sidebar-icons"
-                    color={editHover ? "#6698FF" : "#387C44"}
-                    size={editHover ? 25 : 20}
-                  ></FaEdit>
-                </div>
-                <div
-                  onMouseEnter={() => sessionAnalyzerHoverFunc("on")}
-                  onMouseLeave={() => sessionAnalyzerHoverFunc("off")}
-                  onClick={() => sidebarMenuSessionAnalyzer()}
-                  className="short-sidebar-element-div"
-                >
-                  <FaMedapps
-                    id="sidebar-icons"
-                    color={analyzerHover ? "#6698FF" : "#387C44"}
-                    size={analyzerHover ? 25 : 20}
-                  ></FaMedapps>
-                </div>
-                <div
-                  onMouseEnter={() => settingsHoverFunc("on")}
-                  onMouseLeave={() => settingsHoverFunc("off")}
-                  onClick={() => sidebarMenuSettings()}
-                  className="short-sidebar-element-div"
-                >
-                  <FaTools
-                    id="sidebar-icons"
-                    color={settingsHover ? "#6698FF" : "#387C44"}
-                    size={settingsHover ? 25 : 20}
-                  ></FaTools>
-                </div>
-              </div>
+              <SmallSideBar
+                currentServiceHover={currentServiceHover}
+                editHover={editHover}
+                analyzerHover={analyzerHover}
+                settingsHover={settingsHover}
+                setCurrentServiceHover={(props) =>
+                  setCurrentServiceHover(props)
+                }
+                setEditHover={(props) => setEditHover(props)}
+                setAnalyzerHover={(props) => setAnalyzerHover(props)}
+                setSettingsHover={(props) => setSettingsHover(props)}
+              />
             )
           }
           {/**

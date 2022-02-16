@@ -1088,7 +1088,7 @@ ipcMain.on("delete-service", async (event, arg) => {
 });
 
 // event emitter used to open Clemotec website in the OS default browser
-ipcMain.on("open-clemotec", async (event, arg) => {
+ipcMain.on("open-website", async (event, arg) => {
   await shell.openExternal("https://clemotecghana.000webhostapp.com");
 });
 

@@ -2,23 +2,9 @@
 import React from "react";
 import "../../Assets/css/AboutPage.css";
 import logo from "../../Assets/images/logo/cotrack-logo.png";
-const { ipcRenderer } = window.require("electron");
+import { checkUpdates, openWebsite, closeAboutWindow } from './functions';
 
 export default function AboutPage() {
-  // expression to open the Clemotec website
-  const openClemotec = () => {
-    ipcRenderer.send("open-clemotec");
-  };
-
-  // expression to open Clemotec apps and updates on the Clemotec webiste
-  const openUpdates = () => {
-    ipcRenderer.send("open-updates");
-  };
-
-  // expression to close the About window
-  const closeAboutWindow = () => {
-    ipcRenderer.send("close-about-window");
-  };
 
   return (
     <div className="about-container">
@@ -35,7 +21,7 @@ export default function AboutPage() {
         <p>Cotrack is a church management software.</p>
         <p>
           Sponsored by{" "}
-          <span className="clemotec-link" onClick={() => openClemotec()}>
+          <span className="clemotec-link" onClick={() => openWebsite()}>
             {" "}
             Clemotec Inc.{" "}
           </span>
@@ -44,7 +30,7 @@ export default function AboutPage() {
       </div>
       <div className="buttons-main-div">
         <div className="buttons-div">
-          <span className="check-update-button" onClick={() => openUpdates()}>
+          <span className="check-update-button" onClick={() => checkUpdates()}>
             Check for updates
           </span>
         </div>
