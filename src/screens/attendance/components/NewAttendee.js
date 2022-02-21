@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import "../../../Assets/css/NewAttendee.css";
 import { BsToggleOff, BsToggleOn } from "react-icons/bs";
+import { TextInput, SelectInput } from "../../../components";
 const { ipcRenderer } = window.require("electron");
 
 export default function NewAttendee(props) {
@@ -231,10 +232,9 @@ export default function NewAttendee(props) {
           <label htmlFor="first-name-label" className="attendee-details-text">
             First Name:{" "}
           </label>
-          <input
+          <TextInput
             type="text"
             id="first-name-label"
-            className="attendee-details-input-text"
             placeholder="Clement"
             value={firstName}
             onChange={firstNameFunc}
@@ -244,10 +244,9 @@ export default function NewAttendee(props) {
           <label htmlFor="last-name-label" className="attendee-details-text">
             Last Name:{" "}
           </label>
-          <input
+          <TextInput
             type="text"
             id="last-name-label"
-            className="attendee-details-input-text"
             placeholder="Gyimah"
             value={lastName}
             onChange={lastNameFunc}
@@ -257,17 +256,23 @@ export default function NewAttendee(props) {
           <label htmlFor="last-name-label" className="attendee-details-text">
             Gender:{" "}
           </label>
-          <select
+          <SelectInput
             id="last-name-label"
-            className="attendee-details-input-text"
             placeholder="Gender"
             value={gender}
             onChange={genderFunc}
-          >
-            <option value="">Choose Gender</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-          </select>
+            intro="Choose Gender"
+            options={[
+              {
+                displayName: 'Male',
+                value: 'Male'
+              },
+              {
+                displayName: 'Female',
+                value: 'Female'
+              }
+            ]}
+          />
         </div>
         <div className="section-div">
           <label
@@ -281,20 +286,18 @@ export default function NewAttendee(props) {
             Location:{" "}
           </label>
           {activateLocation ? (
-            <input
+            <TextInput
               type="text"
               id="location-label"
-              className="attendee-details-input-text"
               placeholder="Aputuogya"
               value={location}
               onChange={locationFunc}
             />
           ) : (
-            <input
-              disabled
+            <TextInput
+              disabled={true}
               type="text"
               id="location-label"
-              className="attendee-details-input-text"
               placeholder="Aputuogya"
               value={location}
               onChange={locationFunc}
@@ -332,20 +335,18 @@ export default function NewAttendee(props) {
             Contact Number:{" "}
           </label>
           {activateContact ? (
-            <input
+            <TextInput
               type="text"
               id="contact-number-label"
-              className="attendee-details-input-text"
               placeholder="0559505063"
               value={contactNumber}
               onChange={contactNumberFunc}
             />
           ) : (
-            <input
-              disabled
+            <TextInput
+              disabled={true}
               type="text"
               id="contact-number-label"
-              className="attendee-details-input-text"
               placeholder="0559505063"
               value={contactNumber}
               onChange={contactNumberFunc}
@@ -382,20 +383,18 @@ export default function NewAttendee(props) {
             Email Address:{" "}
           </label>
           {activateEmail ? (
-            <input
+            <TextInput
               type="text"
               id="email-address-label"
-              className="attendee-details-input-text"
               placeholder="clementgyimah2@gmail.com"
               value={emailAddress}
               onChange={emailAddressFunc}
             />
           ) : (
-            <input
-              disabled
+            <TextInput
+              disabled={true}
               type="text"
               id="email-address-label"
-              className="attendee-details-input-text"
               placeholder="clementgyimah2@gmail.com"
               value={emailAddress}
               onChange={emailAddressFunc}
@@ -432,23 +431,19 @@ export default function NewAttendee(props) {
             Temperature:{" "}
           </label>
           {activateTemp ? (
-            <input
+            <TextInput
               type="number"
               id="temperature-label"
-              className="attendee-details-input-number"
               placeholder="37.01"
-              step="0.01"
               value={temperature}
               onChange={temperatureFunc}
             />
           ) : (
-            <input
-              disabled
+            <TextInput
+              disabled={true}
               type="number"
               id="temperature-label"
-              className="attendee-details-input-number"
               placeholder="37.01"
-              step="0.01"
               value={temperature}
               onChange={temperatureFunc}
             />
