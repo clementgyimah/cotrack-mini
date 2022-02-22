@@ -1,7 +1,7 @@
 // Calling all necessary packages and libraries
 import React from "react";
-import "../../Assets/css/AboutPage.css";
-import logo from "../../Assets/images/logo/cotrack-logo.png";
+import "../../assets/css/AboutPage.css";
+import logo from "../../assets/images/logo/cotrack-logo.png";
 import { checkUpdates, openWebsite, closeAboutWindow } from './functions';
 
 export default function AboutPage() {

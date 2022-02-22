@@ -1,6 +1,6 @@
 // Calling all necessary packages and libraries
 import React, { useEffect, useState } from "react";
-import "../../Assets/css/OldAttendee.css";
+import "../../assets/css/OldAttendee.css";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import EditServiceModal from "./components/EditSessionModal";
 const { ipcRenderer } = window.require("electron");

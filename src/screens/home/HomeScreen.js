@@ -1,6 +1,6 @@
 // Calling all necessary packages and libraries
 import React, { useState, useEffect } from "react";
-import "../../Assets/css/HomePage.css";
+import "../../assets/css/HomePage.css";
 import { FaBars } from "react-icons/fa";
 import { BsToggleOff, BsToggleOn } from "react-icons/bs";
 import { BigSideBar, SmallSideBar } from "./components/SideBar";

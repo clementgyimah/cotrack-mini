@@ -1,8 +1,9 @@
 // Calling all necessary packages and libraries
 import React, { useState } from "react";
-import "../../../Assets/css/NewAttendee.css";
+import "../../../assets/css/NewAttendee.css";
+import { NewAttendeeFormInputStyle, NewAttendeeFormSelectStyle, AsterickIcon } from "../../../assets/styles";
 import { BsToggleOff, BsToggleOn } from "react-icons/bs";
-import { TextInput, SelectInput } from "../../../components";
+import { TextInput, SelectInput, FaAsteriskIcon } from "../../../components";
 const { ipcRenderer } = window.require("electron");
 
 export default function NewAttendee(props) {
@@ -238,7 +239,9 @@ export default function NewAttendee(props) {
             placeholder="Clement"
             value={firstName}
             onChange={firstNameFunc}
+            inputStyle={NewAttendeeFormInputStyle}
           />
+          <FaAsteriskIcon style={AsterickIcon} />
         </div>
         <div className="section-div">
           <label htmlFor="last-name-label" className="attendee-details-text">
@@ -250,7 +253,9 @@ export default function NewAttendee(props) {
             placeholder="Gyimah"
             value={lastName}
             onChange={lastNameFunc}
+            inputStyle={NewAttendeeFormInputStyle}
           />
+          <FaAsteriskIcon style={AsterickIcon} />
         </div>
         <div className="section-div">
           <label htmlFor="last-name-label" className="attendee-details-text">
@@ -262,6 +267,7 @@ export default function NewAttendee(props) {
             value={gender}
             onChange={genderFunc}
             intro="Choose Gender"
+            selectStyle={NewAttendeeFormSelectStyle}
             options={[
               {
                 displayName: 'Male',
@@ -273,6 +279,7 @@ export default function NewAttendee(props) {
               }
             ]}
           />
+          <FaAsteriskIcon style={AsterickIcon} />
         </div>
         <div className="section-div">
           <label
@@ -292,6 +299,7 @@ export default function NewAttendee(props) {
               placeholder="Aputuogya"
               value={location}
               onChange={locationFunc}
+              inputStyle={NewAttendeeFormInputStyle}
             />
           ) : (
             <TextInput
@@ -301,6 +309,7 @@ export default function NewAttendee(props) {
               placeholder="Aputuogya"
               value={location}
               onChange={locationFunc}
+              inputStyle={NewAttendeeFormInputStyle}
             />
           )}
 
@@ -341,6 +350,7 @@ export default function NewAttendee(props) {
               placeholder="0559505063"
               value={contactNumber}
               onChange={contactNumberFunc}
+              inputStyle={NewAttendeeFormInputStyle}
             />
           ) : (
             <TextInput
@@ -350,6 +360,7 @@ export default function NewAttendee(props) {
               placeholder="0559505063"
               value={contactNumber}
               onChange={contactNumberFunc}
+              inputStyle={NewAttendeeFormInputStyle}
             />
           )}
           <span
@@ -389,6 +400,7 @@ export default function NewAttendee(props) {
               placeholder="clementgyimah2@gmail.com"
               value={emailAddress}
               onChange={emailAddressFunc}
+              inputStyle={NewAttendeeFormInputStyle}
             />
           ) : (
             <TextInput
@@ -398,6 +410,7 @@ export default function NewAttendee(props) {
               placeholder="clementgyimah2@gmail.com"
               value={emailAddress}
               onChange={emailAddressFunc}
+              inputStyle={NewAttendeeFormInputStyle}
             />
           )}
           <span
@@ -437,6 +450,7 @@ export default function NewAttendee(props) {
               placeholder="37.01"
               value={temperature}
               onChange={temperatureFunc}
+              inputStyle={NewAttendeeFormInputStyle}
             />
           ) : (
             <TextInput
@@ -446,6 +460,7 @@ export default function NewAttendee(props) {
               placeholder="37.01"
               value={temperature}
               onChange={temperatureFunc}
+              inputStyle={NewAttendeeFormInputStyle}
             />
           )}
           <span

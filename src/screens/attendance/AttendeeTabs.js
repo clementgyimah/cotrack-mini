@@ -1,6 +1,6 @@
 // Calling all necessary packages and libraries
 import React, { useState, useEffect } from "react";
-import "../../Assets/css/AttendeeTabs.css";
+import "../../assets/css/AttendeeTabs.css";
 import NewAttendee from "./components/NewAttendee";
 import OldAttendee from "./components/OldAttendee";
 const { ipcRenderer } = window.require("electron");

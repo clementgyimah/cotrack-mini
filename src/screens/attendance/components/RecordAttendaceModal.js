@@ -1,6 +1,6 @@
 // Calling all necessary packages and libraries
 import React, { useState } from "react";
-import "../../../Assets/css/Modal.css";
+import "../../../assets/css/Modal.css";
 import { BsToggleOff, BsToggleOn } from "react-icons/bs";
 import PropTypes from "prop-types";
 const { ipcRenderer } = window.require("electron");

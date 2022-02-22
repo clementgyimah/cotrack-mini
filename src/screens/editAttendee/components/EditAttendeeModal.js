@@ -1,6 +1,6 @@
 // Calling all necessary packages and libraries
 import React, { useState, useEffect } from "react";
-import "../../../Assets/css/Modal.css";
+import "../../../assets/css/Modal.css";
 import PropTypes from "prop-types";
 const { ipcRenderer } = window.require("electron");
 

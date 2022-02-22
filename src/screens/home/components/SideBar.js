@@ -9,7 +9,7 @@ import {
   sidebarMenuSessionAnalyzer,
   sidebarMenuSettings,
 } from "../functions/sidebarFunc";
-import "../../../Assets/css/HomePage.css";
+import "../../../assets/css/HomePage.css";
 import { FaTools, FaWindowMaximize, FaEdit, FaMedapps } from "react-icons/fa";
 
 const BigSideBar = ({ ...bigSideBarProps }) => (
