@@ -13,7 +13,11 @@ const addNewAttendee = (props) => {
    * logic that uses "Exclusive OR" to make sure that each toggle button
    * correlate with it's input before form submission
    */
-  if (props.firstName.length === 0 || props.lastName.length === 0 || props.gender.length === 0)
+  if (
+    props.firstName.length === 0 ||
+    props.lastName.length === 0 ||
+    props.gender.length === 0
+  )
     return props.setInvalidAdd(true);
   else if (props.temperature.length === 0) {
     if (
@@ -64,14 +68,10 @@ const addNewAttendee = (props) => {
       ipcRenderer.on("new-attendee-reply", (event, arg) => {
         props.setAttendeeAlreadyExist(arg);
       });
-      props.setFirstName("");
-      props.setLastName("");
-      props.setLocation("");
-      props.setContactNumber("");
-      props.setEmailAddress("");
-      props.setTemperature("");
+      props.resetAllInputs();
+      props.resetAllErrors();
     }
   }
 };
 
-export { addNewAttendee }
+export { addNewAttendee };
