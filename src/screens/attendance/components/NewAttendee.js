@@ -4,10 +4,16 @@ import "../../../assets/css/NewAttendee.css";
 import {
   NewAttendeeFormInputStyle,
   NewAttendeeFormSelectStyle,
-  AsterickIcon,
+  AsterickIconStyle,
+  toggleIconStyle,
 } from "../../../assets/styles";
-import { BsToggleOff, BsToggleOn } from "react-icons/bs";
-import { TextInput, SelectInput, FaAsteriskIcon } from "../../../components";
+import {
+  TextInput,
+  SelectInput,
+  FaAsteriskIcon,
+  BsToggleOnIcon,
+  BsToggleOffIcon,
+} from "../../../components";
 import { addNewAttendee } from "../functions";
 
 export default function NewAttendee(props) {
@@ -24,6 +30,7 @@ export default function NewAttendee(props) {
   const [activateTemp, setActivateTemp] = useState(false);
   const [invalidEmail, setInvalidEmail] = useState(false);
 
+  // reset all inputs
   const resetAllInputs = () => {
     setFirstName("");
     setLastName("");
@@ -33,67 +40,53 @@ export default function NewAttendee(props) {
     setTemperature("");
   };
 
+  // reset all errors
   const resetAllErrors = () => {
     setAttendeeAlreadyExist(false);
     setInvalidAdd(false);
     setInvalidEmail(false);
-  }
+  };
 
   // expressions to set inputs to their respective state variables
   const firstNameFunc = (e) => {
     setFirstName(e.target.value);
-    setAttendeeAlreadyExist(false);
-    setInvalidAdd(false);
-    setInvalidEmail(false);
+    resetAllErrors();
   };
 
   const lastNameFunc = (e) => {
     setLastName(e.target.value);
-    setAttendeeAlreadyExist(false);
-    setInvalidAdd(false);
-    setInvalidEmail(false);
+    resetAllErrors();
   };
 
   const genderFunc = (e) => {
     setGender(e.target.value);
-    setAttendeeAlreadyExist(false);
-    setInvalidAdd(false);
-    setInvalidEmail(false);
+    resetAllErrors();
   };
 
   const locationFunc = (e) => {
     setLocation(e.target.value);
-    setAttendeeAlreadyExist(false);
-    setInvalidAdd(false);
-    setInvalidEmail(false);
+    resetAllErrors();
   };
 
   const contactNumberFunc = (e) => {
     setContactNumber(e.target.value);
-    setAttendeeAlreadyExist(false);
-    setInvalidAdd(false);
-    setInvalidEmail(false);
+    resetAllErrors();
   };
 
   const emailAddressFunc = (e) => {
     setEmailAddress(e.target.value);
-    setAttendeeAlreadyExist(false);
-    setInvalidAdd(false);
-    setInvalidEmail(false);
+    resetAllErrors();
   };
 
   const temperatureFunc = (e) => {
     setTemperature(e.target.value);
-    setAttendeeAlreadyExist(false);
-    setInvalidAdd(false);
-    setInvalidEmail(false);
+    resetAllErrors();
   };
 
   const activateTempFunc = () => {
     setActivateTemp(!activateTemp);
     setTemperature("");
-    setInvalidAdd(false);
-    setInvalidEmail(false);
+    resetAllErrors();
   };
 
   return (
@@ -112,7 +105,7 @@ export default function NewAttendee(props) {
             onChange={firstNameFunc}
             inputStyle={NewAttendeeFormInputStyle}
           />
-          <FaAsteriskIcon style={AsterickIcon} />
+          <FaAsteriskIcon style={AsterickIconStyle} />
         </div>
         <div className="section-div">
           <label htmlFor="last-name-label" className="attendee-details-text">
@@ -126,7 +119,7 @@ export default function NewAttendee(props) {
             onChange={lastNameFunc}
             inputStyle={NewAttendeeFormInputStyle}
           />
-          <FaAsteriskIcon style={AsterickIcon} />
+          <FaAsteriskIcon style={AsterickIconStyle} />
         </div>
         <div className="section-div">
           <label htmlFor="last-name-label" className="attendee-details-text">
@@ -150,7 +143,7 @@ export default function NewAttendee(props) {
               },
             ]}
           />
-          <FaAsteriskIcon style={AsterickIcon} />
+          <FaAsteriskIcon style={AsterickIconStyle} />
         </div>
         <div className="section-div">
           <label htmlFor="location-label" className="attendee-details-text">
@@ -233,44 +226,38 @@ export default function NewAttendee(props) {
             onClick={() => activateTempFunc()}
           >
             {activateTemp ? (
-              <BsToggleOn
-                className="activate-toggle-on"
-                size={30}
-                color="#387C44"
-              />
+              <BsToggleOnIcon style={toggleIconStyle} />
             ) : (
-              <BsToggleOff
-                className="activate-toggle-off"
-                size={30}
-                color="#387C44"
-              />
+              <BsToggleOffIcon style={toggleIconStyle} />
             )}
           </span>
         </div>
         <div className="temperature-button-div">
           <div
-            onClick={() => addNewAttendee({
-              firstName,
-              lastName,
-              gender,
-              location,
-              contactNumber,
-              emailAddress,
-              temperature,
-              activateTemp,
-              setFirstName,
-              setLastName,
-              setGender,
-              setLocation,
-              setContactNumber,
-              setEmailAddress,
-              setTemperature,
-              setAttendeeAlreadyExist,
-              setInvalidAdd,
-              setInvalidEmail,
-              resetAllInputs,
-              resetAllErrors
-            })}
+            onClick={() =>
+              addNewAttendee({
+                firstName,
+                lastName,
+                gender,
+                location,
+                contactNumber,
+                emailAddress,
+                temperature,
+                activateTemp,
+                setFirstName,
+                setLastName,
+                setGender,
+                setLocation,
+                setContactNumber,
+                setEmailAddress,
+                setTemperature,
+                setAttendeeAlreadyExist,
+                setInvalidAdd,
+                setInvalidEmail,
+                resetAllInputs,
+                resetAllErrors,
+              })
+            }
             className="temperature-button"
           >
             Save
