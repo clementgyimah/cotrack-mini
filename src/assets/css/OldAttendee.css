@@ -36,17 +36,6 @@
     margin-top: 100px;
 }
 
-.search-input {
-    border: solid 2px #387C44;
-    width: 50%;
-    height: 30px;
-    border-radius: 20px;
-    font-size: 20px;
-    display: flex;
-    color: rgba(0, 0, 0, 0.7);
-    padding-left: 10px;
-}
-
 .type-of-table {
     display: flex;
     justify-content: center;
