@@ -112,7 +112,7 @@ export default function EditPage() {
         <input
           className="search-input"
           type="text"
-          placeholder="Type something to search for attendee(s)"
+          placeholder="Type name to search for attendee(s)"
           onChange={searchChange}
         />
       </div>
