@@ -3,7 +3,13 @@ import React, { useEffect, useState } from "react";
 import TemperatureModal from "./RecordAttendaceModal";
 import "../../../assets/css/OldAttendee.css";
 import { FaThermometerHalf } from "react-icons/fa";
-import { BsToggleOff, BsToggleOn } from "react-icons/bs";
+import { TextInput } from "../../../components";
+import { searchChange } from "../functions"
+import {
+  oldAttendeeSearchInputStyle,
+  toggleIconStyle,
+} from "../../../assets/styles";
+import { BsToggleOnIcon, BsToggleOffIcon } from "../../../components";
 const { ipcRenderer } = window.require("electron");
 
 export default function OldAttendee() {
@@ -34,54 +40,25 @@ export default function OldAttendee() {
     if (isSubscribed) {
       ipcRenderer.send("old-attendee-all");
       ipcRenderer.on("old-attendee-all-reply", async (event, arg) => {
-        await setAllAttendee(arg);
+        setAllAttendee(arg);
       });
       ipcRenderer.send("search-current-session");
       ipcRenderer.on("search-current-session-reply", async (event, arg) => {
-        await setCurrentSession(arg);
+        setCurrentSession(arg);
       });
       ipcRenderer.send("old-attendee-current-session-all");
       ipcRenderer.on("sessionTime-reply", async (event, arg) => {
-        await setTimeHolder(arg);
+        setTimeHolder(arg);
       });
       ipcRenderer.on(
         "old-attendee-current-session-all-reply",
         async (event, arg) => {
-          await setAllCurrentSessionAttendee(arg);
+          setAllCurrentSessionAttendee(arg);
         }
       );
     }
     return () => (isSubscribed = false);
   }, [viewCurrentSession]);
-
-  // expression to monitor changes in the search input
-  const searchChange = (searchObject) => {
-    const searchName = searchObject.target.value;
-    if (viewCurrentSession) {
-      if (searchName.length !== 0) {
-        ipcRenderer.send("old-attendee-current-session-name", searchName);
-        ipcRenderer.on(
-          "old-attendee-current-session-name-reply",
-          (event, arg) => {
-            setGroupAttendee(arg);
-          }
-        );
-        setSearchActive(true);
-      } else {
-        setSearchActive(false);
-      }
-    } else {
-      if (searchName.length !== 0) {
-        ipcRenderer.send("old-attendee-name", searchName);
-        ipcRenderer.on("old-attendee-name-reply", (event, arg) => {
-          setGroupAttendee(arg);
-        });
-        setSearchActive(true);
-      } else {
-        setSearchActive(false);
-      }
-    }
-  };
 
   // expressions to set inputs to their respective state variables
   const handleTemperature = (
@@ -100,6 +77,17 @@ export default function OldAttendee() {
     setCurrentEmailAddress(emailAddress);
     setShowTempModal(true);
   };
+
+  const handleSearchInput = (e) => {
+    return searchChange(
+      {
+        viewCurrentSession,
+        searchName: e.target.value,
+        setSearchActive,
+        setGroupAttendee,
+      }
+    )
+  }
 
   // expression to take care of closing the temperature recording modal
   const closeTempModal = () => {
@@ -129,11 +117,11 @@ export default function OldAttendee() {
       />
       {/** search input div */}
       <div className="search-input-div">
-        <input
-          className="search-input"
+        <TextInput
           type="text"
-          placeholder="Type something to search for attendee(s)"
-          onChange={searchChange}
+          placeholder="Type name to search for attendee(s)"
+          onChange={handleSearchInput}
+          inputStyle={oldAttendeeSearchInputStyle}
         />
       </div>
       <div className="type-of-table">
@@ -145,17 +133,9 @@ export default function OldAttendee() {
           onClick={() => viewCurrentSessionFunc()}
         >
           {viewCurrentSession ? (
-            <BsToggleOn
-              className="type-of-table-toggle-on"
-              size={30}
-              color="#387C44"
-            />
+            <BsToggleOnIcon style={toggleIconStyle} />
           ) : (
-            <BsToggleOff
-              className="type-of-table-toggle-off"
-              size={30}
-              color="#387C44"
-            />
+            <BsToggleOffIcon style={toggleIconStyle} />
           )}
         </span>
       </div>

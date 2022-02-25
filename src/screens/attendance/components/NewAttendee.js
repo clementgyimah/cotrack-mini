@@ -2,9 +2,9 @@
 import React, { useState } from "react";
 import "../../../assets/css/NewAttendee.css";
 import {
-  NewAttendeeFormInputStyle,
-  NewAttendeeFormSelectStyle,
-  AsterickIconStyle,
+  newAttendeeFormInputStyle,
+  newAttendeeFormSelectStyle,
+  asterickIconStyle,
   toggleIconStyle,
 } from "../../../assets/styles";
 import {
@@ -103,9 +103,9 @@ export default function NewAttendee(props) {
             placeholder="Clement"
             value={firstName}
             onChange={firstNameFunc}
-            inputStyle={NewAttendeeFormInputStyle}
+            inputStyle={newAttendeeFormInputStyle}
           />
-          <FaAsteriskIcon style={AsterickIconStyle} />
+          <FaAsteriskIcon style={asterickIconStyle} />
         </div>
         <div className="section-div">
           <label htmlFor="last-name-label" className="attendee-details-text">
@@ -117,9 +117,9 @@ export default function NewAttendee(props) {
             placeholder="Gyimah"
             value={lastName}
             onChange={lastNameFunc}
-            inputStyle={NewAttendeeFormInputStyle}
+            inputStyle={newAttendeeFormInputStyle}
           />
-          <FaAsteriskIcon style={AsterickIconStyle} />
+          <FaAsteriskIcon style={asterickIconStyle} />
         </div>
         <div className="section-div">
           <label htmlFor="last-name-label" className="attendee-details-text">
@@ -131,7 +131,7 @@ export default function NewAttendee(props) {
             value={gender}
             onChange={genderFunc}
             intro="Choose Gender"
-            selectStyle={NewAttendeeFormSelectStyle}
+            selectStyle={newAttendeeFormSelectStyle}
             options={[
               {
                 displayName: "Male",
@@ -143,7 +143,7 @@ export default function NewAttendee(props) {
               },
             ]}
           />
-          <FaAsteriskIcon style={AsterickIconStyle} />
+          <FaAsteriskIcon style={asterickIconStyle} />
         </div>
         <div className="section-div">
           <label htmlFor="location-label" className="attendee-details-text">
@@ -155,7 +155,7 @@ export default function NewAttendee(props) {
             placeholder="Aputuogya"
             value={location}
             onChange={locationFunc}
-            inputStyle={NewAttendeeFormInputStyle}
+            inputStyle={newAttendeeFormInputStyle}
           />
         </div>
         <div className="section-div">
@@ -171,7 +171,7 @@ export default function NewAttendee(props) {
             placeholder="0559505063"
             value={contactNumber}
             onChange={contactNumberFunc}
-            inputStyle={NewAttendeeFormInputStyle}
+            inputStyle={newAttendeeFormInputStyle}
           />
         </div>
         <div className="section-div">
@@ -187,7 +187,7 @@ export default function NewAttendee(props) {
             placeholder="clementgyimah2@gmail.com"
             value={emailAddress}
             onChange={emailAddressFunc}
-            inputStyle={NewAttendeeFormInputStyle}
+            inputStyle={newAttendeeFormInputStyle}
           />
         </div>
         <div className="section-div">
@@ -208,7 +208,7 @@ export default function NewAttendee(props) {
               placeholder="37.01"
               value={temperature}
               onChange={temperatureFunc}
-              inputStyle={NewAttendeeFormInputStyle}
+              inputStyle={newAttendeeFormInputStyle}
             />
           ) : (
             <TextInput
@@ -218,7 +218,7 @@ export default function NewAttendee(props) {
               placeholder="37.01"
               value={temperature}
               onChange={temperatureFunc}
-              inputStyle={NewAttendeeFormInputStyle}
+              inputStyle={newAttendeeFormInputStyle}
             />
           )}
           <span
