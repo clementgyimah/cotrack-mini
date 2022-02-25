@@ -19,6 +19,7 @@
 .cotrack-title {
     width: 100%;
     display: flex;
+    color: rgba(0, 0, 0, 0.7);
     justify-content: center;
     align-items: center;
     font-size: 30px;
@@ -30,6 +31,7 @@
     width: 100%;
     height: 20%;
     font-size: 15px;
+    color: rgba(0, 0, 0, 0.7);
 }
 
 p {
@@ -42,7 +44,7 @@ p {
 .clemotec-link {
     padding-left: 10px;
     font-weight: 600;
-    color: blue;
+    color: #2d6ef0b6;
     cursor: pointer;
 }
 
@@ -79,7 +81,7 @@ p {
     border-radius: 30px;
     width: 80px;
     height: 25px;
-    background-color: red;
+    background-color: rgb(233, 25, 25);
     display: flex;
     justify-content: center;
     align-items: center;

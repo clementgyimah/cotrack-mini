@@ -1,7 +1,7 @@
 // Calling all necessary packages and libraries
 import React, { useState, useEffect } from "react";
-import "../Assets/css/OldAttendee.css";
-import EditAttendeeModal from "./EditAttendeeModal";
+import "../../assets/css/OldAttendee.css";
+import EditAttendeeModal from "./components/EditAttendeeModal";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 const { ipcRenderer } = window.require("electron");
 
@@ -112,7 +112,7 @@ export default function EditPage() {
         <input
           className="search-input"
           type="text"
-          placeholder="Type something to search for attendee(s)"
+          placeholder="Type name to search for attendee(s)"
           onChange={searchChange}
         />
       </div>

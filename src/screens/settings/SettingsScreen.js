@@ -1,6 +1,6 @@
 // Calling all necessary packages and libraries
 import React, { useState, useEffect } from "react";
-import "../Assets/css/Settings.css";
+import "../../assets/css/Settings.css";
 const { ipcRenderer } = window.require("electron");
 
 export default function SettingsPage() {
