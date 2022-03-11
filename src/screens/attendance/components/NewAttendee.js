@@ -14,7 +14,13 @@ import {
   BsToggleOnIcon,
   BsToggleOffIcon,
 } from "../../../components";
-import { addNewAttendee } from "../functions";
+import {
+  addNewAttendee,
+  onInputChange,
+  resetInput,
+  resetError,
+  activateTempFunc,
+} from "../functions";
 
 export default function NewAttendee(props) {
   // declaration of state variables
@@ -30,65 +36,6 @@ export default function NewAttendee(props) {
   const [activateTemp, setActivateTemp] = useState(false);
   const [invalidEmail, setInvalidEmail] = useState(false);
 
-  // reset all inputs
-  const resetAllInputs = () => {
-    setFirstName("");
-    setLastName("");
-    setLocation("");
-    setContactNumber("");
-    setEmailAddress("");
-    setTemperature("");
-  };
-
-  // reset all errors
-  const resetAllErrors = () => {
-    setAttendeeAlreadyExist(false);
-    setInvalidAdd(false);
-    setInvalidEmail(false);
-  };
-
-  // expressions to set inputs to their respective state variables
-  const firstNameFunc = (e) => {
-    setFirstName(e.target.value);
-    resetAllErrors();
-  };
-
-  const lastNameFunc = (e) => {
-    setLastName(e.target.value);
-    resetAllErrors();
-  };
-
-  const genderFunc = (e) => {
-    setGender(e.target.value);
-    resetAllErrors();
-  };
-
-  const locationFunc = (e) => {
-    setLocation(e.target.value);
-    resetAllErrors();
-  };
-
-  const contactNumberFunc = (e) => {
-    setContactNumber(e.target.value);
-    resetAllErrors();
-  };
-
-  const emailAddressFunc = (e) => {
-    setEmailAddress(e.target.value);
-    resetAllErrors();
-  };
-
-  const temperatureFunc = (e) => {
-    setTemperature(e.target.value);
-    resetAllErrors();
-  };
-
-  const activateTempFunc = () => {
-    setActivateTemp(!activateTemp);
-    setTemperature("");
-    resetAllErrors();
-  };
-
   return (
     <div className="new-attendee-container">
       <div className="new-attendee-holder">
@@ -102,7 +49,16 @@ export default function NewAttendee(props) {
             id="first-name-label"
             placeholder="Clement"
             value={firstName}
-            onChange={firstNameFunc}
+            onChange={(e) =>
+              onInputChange({
+                value: e.target.value,
+                setValue: setFirstName,
+                setAttendeeAlreadyExist,
+                setInvalidAdd,
+                setInvalidEmail,
+                resetError,
+              })
+            }
             inputStyle={newAttendeeFormInputStyle}
           />
           <FaAsteriskIcon style={asterickIconStyle} />
@@ -116,7 +72,16 @@ export default function NewAttendee(props) {
             id="last-name-label"
             placeholder="Gyimah"
             value={lastName}
-            onChange={lastNameFunc}
+            onChange={(e) =>
+              onInputChange({
+                value: e.target.value,
+                setValue: setLastName,
+                setAttendeeAlreadyExist,
+                setInvalidAdd,
+                setInvalidEmail,
+                resetError,
+              })
+            }
             inputStyle={newAttendeeFormInputStyle}
           />
           <FaAsteriskIcon style={asterickIconStyle} />
@@ -129,7 +94,16 @@ export default function NewAttendee(props) {
             id="last-name-label"
             placeholder="Gender"
             value={gender}
-            onChange={genderFunc}
+            onChange={(e) =>
+              onInputChange({
+                value: e.target.value,
+                setValue: setGender,
+                setAttendeeAlreadyExist,
+                setInvalidAdd,
+                setInvalidEmail,
+                resetError,
+              })
+            }
             intro="Choose Gender"
             selectStyle={newAttendeeFormSelectStyle}
             options={[
@@ -154,7 +128,16 @@ export default function NewAttendee(props) {
             id="location-label"
             placeholder="Aputuogya"
             value={location}
-            onChange={locationFunc}
+            onChange={(e) =>
+              onInputChange({
+                value: e.target.value,
+                setValue: setLocation,
+                setAttendeeAlreadyExist,
+                setInvalidAdd,
+                setInvalidEmail,
+                resetError,
+              })
+            }
             inputStyle={newAttendeeFormInputStyle}
           />
         </div>
@@ -170,7 +153,16 @@ export default function NewAttendee(props) {
             id="contact-number-label"
             placeholder="0559505063"
             value={contactNumber}
-            onChange={contactNumberFunc}
+            onChange={(e) =>
+              onInputChange({
+                value: e.target.value,
+                setValue: setContactNumber,
+                setAttendeeAlreadyExist,
+                setInvalidAdd,
+                setInvalidEmail,
+                resetError,
+              })
+            }
             inputStyle={newAttendeeFormInputStyle}
           />
         </div>
@@ -186,7 +178,16 @@ export default function NewAttendee(props) {
             id="email-address-label"
             placeholder="clementgyimah2@gmail.com"
             value={emailAddress}
-            onChange={emailAddressFunc}
+            onChange={(e) =>
+              onInputChange({
+                value: e.target.value,
+                setValue: setEmailAddress,
+                setAttendeeAlreadyExist,
+                setInvalidAdd,
+                setInvalidEmail,
+                resetError,
+              })
+            }
             inputStyle={newAttendeeFormInputStyle}
           />
         </div>
@@ -207,7 +208,16 @@ export default function NewAttendee(props) {
               id="temperature-label"
               placeholder="37.01"
               value={temperature}
-              onChange={temperatureFunc}
+              onChange={(e) =>
+                onInputChange({
+                  value: e.target.value,
+                  setValue: setTemperature,
+                  setAttendeeAlreadyExist,
+                  setInvalidAdd,
+                  setInvalidEmail,
+                  resetError,
+                })
+              }
               inputStyle={newAttendeeFormInputStyle}
             />
           ) : (
@@ -217,13 +227,32 @@ export default function NewAttendee(props) {
               id="temperature-label"
               placeholder="37.01"
               value={temperature}
-              onChange={temperatureFunc}
+              onChange={(e) =>
+                onInputChange({
+                  value: e.target.value,
+                  setValue: setTemperature,
+                  setAttendeeAlreadyExist,
+                  setInvalidAdd,
+                  setInvalidEmail,
+                  resetError,
+                })
+              }
               inputStyle={newAttendeeFormInputStyle}
             />
           )}
           <span
             className="activate-toggle-span"
-            onClick={() => activateTempFunc()}
+            onClick={() =>
+              activateTempFunc({
+                activateTemp,
+                setActivateTemp,
+                setTemperature,
+                resetError,
+                setAttendeeAlreadyExist,
+                setInvalidAdd,
+                setInvalidEmail,
+              })
+            }
           >
             {activateTemp ? (
               <BsToggleOnIcon style={toggleIconStyle} />
@@ -254,8 +283,8 @@ export default function NewAttendee(props) {
                 setAttendeeAlreadyExist,
                 setInvalidAdd,
                 setInvalidEmail,
-                resetAllInputs,
-                resetAllErrors,
+                resetInput,
+                resetError,
               })
             }
             className="temperature-button"
