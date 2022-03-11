@@ -46,7 +46,7 @@ const addNewAttendee = (props) => {
        * condition to check if a valid email is entered
        * in the email input. Done by checking '@' sign in the input
        */
-      if (emailAddress.indexOf("@") < 0) setInvalidAdd(true);
+      if (emailAddress && emailAddress.indexOf("@") < 0) setInvalidAdd(true);
       else {
         if (emailAddress.length > 25) setInvalidEmail(true);
         else {
@@ -79,7 +79,7 @@ const addNewAttendee = (props) => {
         }
       }
     } else setInvalidAdd(true);
-  } else if (emailAddress.indexOf("@") < 0) {
+  } else if (emailAddress && emailAddress.indexOf("@") < 0) {
     setInvalidAdd(true);
   } else {
     if (emailAddress.length > 25) setInvalidEmail(true);
