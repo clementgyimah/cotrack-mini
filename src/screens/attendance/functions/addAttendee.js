@@ -1,75 +1,115 @@
 const { ipcRenderer } = window.require("electron");
 
 const addNewAttendee = (props) => {
+  const {
+    firstName,
+    lastName,
+    gender,
+    location,
+    contactNumber,
+    emailAddress,
+    temperature,
+    activateTemp,
+    setFirstName,
+    setLastName,
+    setGender,
+    setLocation,
+    setContactNumber,
+    setEmailAddress,
+    setTemperature,
+    setAttendeeAlreadyExist,
+    setInvalidAdd,
+    setInvalidEmail,
+    resetInput,
+    resetError,
+  } = props;
   // variables to hold attendee details
-  props.setFirstName(props.firstName.split(" ").join(""));
-  props.setLastName(props.lastName.split(" ").join(""));
-  props.setContactNumber(props.contactNumber.split(" ").join(""));
-  props.setEmailAddress(props.emailAddress.split(" ").join(""));
-  props.setTemperature(props.temperature.split(" ").join(""));
-  props.setGender(props.gender.split(" ").join(""));
-  console.log(props.gender);
+  setFirstName(firstName.split(" ").join(""));
+  setLastName(lastName.split(" ").join(""));
+  setContactNumber(contactNumber.split(" ").join(""));
+  setEmailAddress(emailAddress.split(" ").join(""));
+  setTemperature(temperature.split(" ").join(""));
+  setGender(gender.split(" ").join(""));
+  console.log(gender);
   /**
    * logic that uses "Exclusive OR" to make sure that each toggle button
    * correlate with it's input before form submission
    */
-  if (
-    props.firstName.length === 0 ||
-    props.lastName.length === 0 ||
-    props.gender.length === 0
-  )
-    return props.setInvalidAdd(true);
-  else if (props.temperature.length === 0) {
+  if (firstName.length === 0 || lastName.length === 0 || gender.length === 0)
+    return setInvalidAdd(true);
+  else if (temperature.length === 0) {
     if (
-      (props.temperature.length === 0 && !props.activateTemp) ||
-      (!(props.temperature.length === 0) && props.activateTemp)
+      (temperature.length === 0 && !activateTemp) ||
+      (!(temperature.length === 0) && activateTemp)
     ) {
       /**
        * condition to check if a valid email is entered
        * in the email input. Done by checking '@' sign in the input
        */
-      if (props.emailAddress.indexOf("@") < 0) props.setInvalidAdd(true);
+      if (emailAddress.indexOf("@") < 0) setInvalidAdd(true);
       else {
-        if (props.emailAddress.length > 25) props.setInvalidEmail(true);
+        if (emailAddress.length > 25) setInvalidEmail(true);
         else {
           const attendeeDetails = {
-            firstName: props.firstName,
-            lastName: props.lastName,
-            gender: props.gender,
-            location: props.location,
-            contactNumber: props.contactNumber,
-            emailAddress: props.emailAddress,
-            temperature: props.temperature,
+            firstName: firstName,
+            lastName: lastName,
+            gender: gender,
+            location: location,
+            contactNumber: contactNumber,
+            emailAddress: emailAddress,
+            temperature: temperature,
           };
           ipcRenderer.send("new-attendee", attendeeDetails);
           ipcRenderer.on("new-attendee-reply", (event, arg) => {
-            props.setAttendeeAlreadyExist(arg);
+            setAttendeeAlreadyExist(arg);
           });
-          props.resetAllInputs();
-          props.resetAllErrors();
+          resetInput({
+            setFirstName,
+            setLastName,
+            setLocation,
+            setContactNumber,
+            setEmailAddress,
+            setTemperature,
+          });
+          resetError({
+            setAttendeeAlreadyExist,
+            setInvalidAdd,
+            setInvalidEmail,
+          });
         }
       }
-    } else props.setInvalidAdd(true);
-  } else if (props.emailAddress.indexOf("@") < 0) {
-    props.setInvalidAdd(true);
+    } else setInvalidAdd(true);
+  } else if (emailAddress.indexOf("@") < 0) {
+    setInvalidAdd(true);
   } else {
-    if (props.emailAddress.length > 25) props.setInvalidEmail(true);
+    if (emailAddress.length > 25) setInvalidEmail(true);
     else {
       const attendeeDetails = {
-        firstName: props.firstName,
-        lastName: props.lastName,
-        gender: props.gender,
-        location: props.location,
-        contactNumber: props.contactNumber,
-        emailAddress: props.emailAddress,
-        temperature: props.temperature,
+        firstName: firstName,
+        lastName: lastName,
+        gender: gender,
+        location: location,
+        contactNumber: contactNumber,
+        emailAddress: emailAddress,
+        temperature: temperature,
       };
       ipcRenderer.send("new-attendee", attendeeDetails);
       ipcRenderer.on("new-attendee-reply", (event, arg) => {
-        props.setAttendeeAlreadyExist(arg);
+        setAttendeeAlreadyExist(arg);
       });
-      props.resetAllInputs();
-      props.resetAllErrors();
+      resetInput({
+        setFirstName,
+        setLastName,
+        setLocation,
+        setContactNumber,
+        setEmailAddress,
+        setTemperature,
+      });
+      resetError({
+        setAttendeeAlreadyExist,
+        setInvalidAdd,
+        setInvalidEmail,
+      });
     }
   }
 };
