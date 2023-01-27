@@ -1,0 +1,12 @@
+.table-tbody-tr-td {
+  font-size: 12px;
+  border-right: solid 0px #387C44;
+  border-left: solid 0px #387C44;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.table-cells-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
