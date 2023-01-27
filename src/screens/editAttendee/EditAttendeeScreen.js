@@ -1,8 +1,9 @@
 // Calling all necessary packages and libraries
 import React, { useState, useEffect } from "react";
-import "../../assets/css/OldAttendee.css";
+// import "../../assets/css/OldAttendee.css";
 import EditAttendeeModal from "./components/EditAttendeeModal";
-import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import { editAttendeeSearchInputStyle } from "../../assets/styles";
+import { TableComp, TextInput } from "../../components";
 const { ipcRenderer } = window.require("electron");
 
 export default function EditPage() {
@@ -109,11 +110,11 @@ export default function EditPage() {
       <div className="edit-header">Edit Attendee</div>
       {/** search input div */}
       <div className="search-input-div">
-        <input
-          className="search-input"
+        <TextInput
           type="text"
           placeholder="Type name to search for attendee(s)"
           onChange={searchChange}
+          inputStyle={editAttendeeSearchInputStyle}
         />
       </div>
       {/** add new attendee div */}
@@ -126,168 +127,14 @@ export default function EditPage() {
         </div>
       </div>
       {/** table div */}
-      <div className="old-attendee-table-div">
-        <table className="old-attendee-table" rules="all">
-          <thead className="old-attendee-table-thread">
-            <tr className="old-attendee-table-thread-tr">
-              <th className="old-attendee-table-thread-tr-th" scope="col">
-                <div className="table-cells-div">First Name</div>
-              </th>
-              <th className="old-attendee-table-thread-tr-th" scope="col">
-                <div className="table-cells-div">Last Name</div>
-              </th>
-              <th className="old-attendee-table-thread-tr-th" scope="col">
-                <div className="table-cells-div">Gender</div>
-              </th>
-              <th className="old-attendee-table-thread-tr-th" scope="col">
-                <div className="table-cells-div">Location</div>
-              </th>
-              <th className="old-attendee-table-thread-tr-th" scope="col">
-                <div className="table-cells-div">Contact Number</div>
-              </th>
-              <th className="old-attendee-table-thread-tr-th" scope="col">
-                <div className="table-cells-div">Email Address</div>
-              </th>
-              <th className="old-attendee-table-thread-tr-th" scope="col">
-                <div className="table-cells-div">Action</div>
-              </th>
-            </tr>
-          </thead>
-          <tbody className="old-attendee-table-tbody">
-            {
-              /** check if the search input is active or in use */
-              searchActive
-                ? groupAttendee
-                  ? groupAttendee.map(function (data) {
-                      return (
-                        <tr
-                          className="old-attendee-table-tbody-tr"
-                          key={data._id}
-                        >
-                          <td className="old-attendee-table-tbody-tr-td">
-                            <div className="table-cells-div">
-                              {data.firstName}
-                            </div>
-                          </td>
-                          <td className="old-attendee-table-tbody-tr-td">
-                            <div className="table-cells-div">
-                              {data.lastName}
-                            </div>
-                          </td>
-                          <td className="old-attendee-table-tbody-tr-td">
-                            <div className="table-cells-div">{data.gender}</div>
-                          </td>
-                          <td className="old-attendee-table-tbody-tr-td">
-                            <div className="table-cells-div">
-                              {data.location}
-                            </div>
-                          </td>
-                          <td className="old-attendee-table-tbody-tr-td">
-                            <div className="table-cells-div">
-                              {data.contactNumber}
-                            </div>
-                          </td>
-                          <td className="old-attendee-table-tbody-tr-td">
-                            <div className="table-cells-div">
-                              {data.emailAddress}
-                            </div>
-                          </td>
-                          <td className="old-attendee-table-tbody-tr-td">
-                            {/** action buttons on the table */}
-                            <div className="edit-table-cells-div">
-                              <span
-                                className="action-icon-span"
-                                onClick={() =>
-                                  handleEdit(
-                                    data._id,
-                                    data.firstName,
-                                    data.lastName,
-                                    data.gender,
-                                    data.location,
-                                    data.contactNumber,
-                                    data.emailAddress
-                                  )
-                                }
-                              >
-                                <FaEdit />
-                              </span>
-                              <span
-                                className="action-icon-span"
-                                onClick={() => handleDelete(data._id)}
-                              >
-                                <FaTrashAlt />
-                              </span>
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })
-                  : console.log("No attendee is gotten from the search")
-                : allAttendee
-                ? allAttendee.map(function (data) {
-                    return (
-                      <tr
-                        className="old-attendee-table-tbody-tr"
-                        key={data._id}
-                      >
-                        <td className="old-attendee-table-tbody-tr-td">
-                          <div className="table-cells-div">
-                            {data.firstName}
-                          </div>
-                        </td>
-                        <td className="old-attendee-table-tbody-tr-td">
-                          <div className="table-cells-div">{data.lastName}</div>
-                        </td>
-                        <td className="old-attendee-table-tbody-tr-td">
-                          <div className="table-cells-div">{data.gender}</div>
-                        </td>
-                        <td className="old-attendee-table-tbody-tr-td">
-                          <div className="table-cells-div">{data.location}</div>
-                        </td>
-                        <td className="old-attendee-table-tbody-tr-td">
-                          <div className="table-cells-div">
-                            {data.contactNumber}
-                          </div>
-                        </td>
-                        <td className="old-attendee-table-tbody-tr-td">
-                          <div className="table-cells-div">
-                            {data.emailAddress}
-                          </div>
-                        </td>
-                        <td className="old-attendee-table-tbody-tr-td">
-                          <div className="edit-table-cells-div">
-                            <span
-                              className="action-icon-span"
-                              onClick={() =>
-                                handleEdit(
-                                  data._id,
-                                  data.firstName,
-                                  data.lastName,
-                                  data.gender,
-                                  data.location,
-                                  data.contactNumber,
-                                  data.emailAddress
-                                )
-                              }
-                            >
-                              <FaEdit />
-                            </span>
-                            <span
-                              className="action-icon-span"
-                              onClick={() => handleDelete(data._id)}
-                            >
-                              <FaTrashAlt />
-                            </span>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })
-                : console.log("No attendee is registered in the database")
-            }
-          </tbody>
-        </table>
-      </div>
+      <TableComp
+        searchActive={searchActive}
+        groupAttendee={groupAttendee}
+        allAttendee={allAttendee}
+        handleTemperature={handleEdit}
+        type="edit"
+        handleDelete={handleDelete}
+      />
     </div>
   );
 }
