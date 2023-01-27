@@ -2,14 +2,14 @@
 import React, { useEffect, useState } from "react";
 import TemperatureModal from "./RecordAttendaceModal";
 import "../../../assets/css/OldAttendee.css";
-import { FaThermometerHalf } from "react-icons/fa";
 import { TextInput } from "../../../components";
-import { searchChange } from "../functions"
+import { searchChange } from "../functions";
 import {
   oldAttendeeSearchInputStyle,
   toggleIconStyle,
 } from "../../../assets/styles";
 import { BsToggleOnIcon, BsToggleOffIcon } from "../../../components";
+import { TableComp } from "../../../components/TableComp";
 const { ipcRenderer } = window.require("electron");
 
 export default function OldAttendee() {
@@ -79,15 +79,13 @@ export default function OldAttendee() {
   };
 
   const handleSearchInput = (e) => {
-    return searchChange(
-      {
-        viewCurrentSession,
-        searchName: e.target.value,
-        setSearchActive,
-        setGroupAttendee,
-      }
-    )
-  }
+    return searchChange({
+      viewCurrentSession,
+      searchName: e.target.value,
+      setSearchActive,
+      setGroupAttendee,
+    });
+  };
 
   // expression to take care of closing the temperature recording modal
   const closeTempModal = () => {
@@ -145,258 +143,15 @@ export default function OldAttendee() {
         <div className="specific-time-div">End Time: {timeHolder.end}</div>
       </div>
       {/** table div */}
-      <div className="old-attendee-table-div">
-        <table className="old-attendee-table" rules="all">
-          <thead className="old-attendee-table-thread">
-            <tr className="old-attendee-table-thread-tr">
-              <th className="old-attendee-table-thread-tr-th" scope="col">
-                <div className="table-cells-div">First Name</div>
-              </th>
-              <th className="old-attendee-table-thread-tr-th" scope="col">
-                <div className="table-cells-div">Last Name</div>
-              </th>
-              <th className="old-attendee-table-thread-tr-th" scope="col">
-                <div className="table-cells-div">Gender</div>
-              </th>
-              <th className="old-attendee-table-thread-tr-th" scope="col">
-                <div className="table-cells-div">Location</div>
-              </th>
-              <th className="old-attendee-table-thread-tr-th" scope="col">
-                <div className="table-cells-div">Contact Number</div>
-              </th>
-              <th className="old-attendee-table-thread-tr-th" scope="col">
-                <div className="table-cells-div">Email Address</div>
-              </th>
-              <th className="old-attendee-table-thread-tr-th" scope="col">
-                <div className="table-cells-div">Temperature</div>
-              </th>
-            </tr>
-          </thead>
-          {viewCurrentSession ? (
-            <tbody className="old-attendee-table-tbody">
-              {searchActive
-                ? groupAttendee
-                  ? groupAttendee.map(function (data) {
-                      return (
-                        <tr
-                          className="old-attendee-table-tbody-tr"
-                          key={
-                            data.firstName +
-                            data.lastName +
-                            data.gender +
-                            data.location +
-                            data.contactNumber +
-                            data.emailAddress
-                          }
-                        >
-                          <td className="old-attendee-table-tbody-tr-td">
-                            <div className="table-cells-div">
-                              {data.firstName}
-                            </div>
-                          </td>
-                          <td className="old-attendee-table-tbody-tr-td">
-                            <div className="table-cells-div">
-                              {data.lastName}
-                            </div>
-                          </td>
-                          <td className="old-attendee-table-tbody-tr-td">
-                            <div className="table-cells-div">{data.gender}</div>
-                          </td>
-                          <td className="old-attendee-table-tbody-tr-td">
-                            <div className="table-cells-div">
-                              {data.location}
-                            </div>
-                          </td>
-                          <td className="old-attendee-table-tbody-tr-td">
-                            <div className="table-cells-div">
-                              {data.contactNumber}
-                            </div>
-                          </td>
-                          <td className="old-attendee-table-tbody-tr-td">
-                            <div className="table-cells-div">
-                              {data.emailAddress}
-                            </div>
-                          </td>
-                          <td className="old-attendee-table-tbody-tr-td">
-                            <div className="table-cells-div">
-                              {data.temperature}
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })
-                  : console.log("No attendee is gotten from the search")
-                : allCurrentSessionAttendee
-                ? allCurrentSessionAttendee.map(function (data) {
-                    return (
-                      <tr
-                        className="old-attendee-table-tbody-tr"
-                        key={
-                          data.firstName +
-                          data.lastName +
-                          data.gender +
-                          data.location +
-                          data.contactNumber +
-                          data.emailAddress
-                        }
-                      >
-                        <td className="old-attendee-table-tbody-tr-td">
-                          <div className="table-cells-div">
-                            {data.firstName}
-                          </div>
-                        </td>
-                        <td className="old-attendee-table-tbody-tr-td">
-                          <div className="table-cells-div">{data.lastName}</div>
-                        </td>
-                        <td className="old-attendee-table-tbody-tr-td">
-                          <div className="table-cells-div">{data.gender}</div>
-                        </td>
-                        <td className="old-attendee-table-tbody-tr-td">
-                          <div className="table-cells-div">{data.location}</div>
-                        </td>
-                        <td className="old-attendee-table-tbody-tr-td">
-                          <div className="table-cells-div">
-                            {data.contactNumber}
-                          </div>
-                        </td>
-                        <td className="old-attendee-table-tbody-tr-td">
-                          <div className="table-cells-div">
-                            {data.emailAddress}
-                          </div>
-                        </td>
-                        <td className="old-attendee-table-tbody-tr-td">
-                          <div className="table-cells-div">
-                            {data.temperature}
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })
-                : console.log("No attendee is registered in the database")}
-            </tbody>
-          ) : (
-            <tbody className="old-attendee-table-tbody">
-              {searchActive
-                ? groupAttendee
-                  ? groupAttendee.map(function (data) {
-                      return (
-                        <tr
-                          className="old-attendee-table-tbody-tr"
-                          key={data._id}
-                        >
-                          <td className="old-attendee-table-tbody-tr-td">
-                            <div className="table-cells-div">
-                              {data.firstName}
-                            </div>
-                          </td>
-                          <td className="old-attendee-table-tbody-tr-td">
-                            <div className="table-cells-div">
-                              {data.lastName}
-                            </div>
-                          </td>
-                          <td className="old-attendee-table-tbody-tr-td">
-                            <div className="table-cells-div">{data.gender}</div>
-                          </td>
-                          <td className="old-attendee-table-tbody-tr-td">
-                            <div className="table-cells-div">
-                              {data.location}
-                            </div>
-                          </td>
-                          <td className="old-attendee-table-tbody-tr-td">
-                            <div className="table-cells-div">
-                              {data.contactNumber}
-                            </div>
-                          </td>
-                          <td className="old-attendee-table-tbody-tr-td">
-                            <div className="table-cells-div">
-                              {data.emailAddress}
-                            </div>
-                          </td>
-                          <td
-                            className="old-attendee-table-tbody-tr-td"
-                            align="center"
-                          >
-                            <div className="table-cells-div">
-                              <span
-                                onClick={() =>
-                                  handleTemperature(
-                                    data.firstName,
-                                    data.lastName,
-                                    data.gender,
-                                    data.location,
-                                    data.contactNumber,
-                                    data.emailAddress
-                                  )
-                                }
-                              >
-                                <FaThermometerHalf />
-                              </span>
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })
-                  : console.log("No attendee is gotten from the search")
-                : allAttendee
-                ? allAttendee.map(function (data) {
-                    return (
-                      <tr
-                        className="old-attendee-table-tbody-tr"
-                        key={data._id}
-                      >
-                        <td className="old-attendee-table-tbody-tr-td">
-                          <div className="table-cells-div">
-                            {data.firstName}
-                          </div>
-                        </td>
-                        <td className="old-attendee-table-tbody-tr-td">
-                          <div className="table-cells-div">{data.lastName}</div>
-                        </td>
-                        <td className="old-attendee-table-tbody-tr-td">
-                          <div className="table-cells-div">{data.gender}</div>
-                        </td>
-                        <td className="old-attendee-table-tbody-tr-td">
-                          <div className="table-cells-div">{data.location}</div>
-                        </td>
-                        <td className="old-attendee-table-tbody-tr-td">
-                          <div className="table-cells-div">
-                            {data.contactNumber}
-                          </div>
-                        </td>
-                        <td className="old-attendee-table-tbody-tr-td">
-                          <div className="table-cells-div">
-                            {data.emailAddress}
-                          </div>
-                        </td>
-                        <td
-                          className="old-attendee-table-tbody-tr-td"
-                          align="center"
-                        >
-                          <div className="table-cells-div">
-                            <span
-                              onClick={() =>
-                                handleTemperature(
-                                  data.firstName,
-                                  data.lastName,
-                                  data.gender,
-                                  data.location,
-                                  data.contactNumber,
-                                  data.emailAddress
-                                )
-                              }
-                            >
-                              <FaThermometerHalf />
-                            </span>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })
-                : console.log("No attendee is registered in the database")}
-            </tbody>
-          )}
-        </table>
-      </div>
+      <TableComp
+        viewCurrentSession={viewCurrentSession}
+        searchActive={searchActive}
+        groupAttendee={groupAttendee}
+        allCurrentSessionAttendee={allCurrentSessionAttendee}
+        allAttendee={allAttendee}
+        handleTemperature={handleTemperature}
+        type="record"
+      />
     </div>
   );
 }
