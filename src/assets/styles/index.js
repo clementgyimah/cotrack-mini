@@ -1,1 +1,2 @@
-export * from './AttendanceStyles'
+export * from "./AttendanceStyles";
+export * from "./EditAttendeeStyles";
