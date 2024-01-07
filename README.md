@@ -1,1 +1,2 @@
 Cotrack Mini is a mini version of Cotrack. Cotrack is an event monitoring platform. It works both offline and online. It has a lot of features that makes event monitoring very easy no matter the size of attendants. This repository is a cross-platform deskop application of Cotrack Mini, designed with Electron framework
+Key to access app on first-time installation: mini->coTraCkdev&Prod.BycTeCh202160422724181510mm!&b@bLn
